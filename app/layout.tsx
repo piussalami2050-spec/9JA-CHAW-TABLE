@@ -2,8 +2,8 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Nigerian Meal Planner - Healthy Nigerian Recipes',
-  description: 'Plan healthy Nigerian meals with reduced salt and sugar intake',
+  title: 'Nigerian Meal Planner',
+  description: 'Healthy Nigerian meal planning app',
 }
 
 export default function RootLayout({
@@ -17,13 +17,3 @@ export default function RootLayout({
     </html>
   )
 }
-```
-
-### Step 4: Double-check your file structure
-
-Your `app` folder should have these files:
-```
-app/
-├── globals.css   ← Make sure this exists!
-├── layout.tsx
-└── page.tsx
