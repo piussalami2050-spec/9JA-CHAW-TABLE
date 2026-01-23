@@ -17,3 +17,13 @@ export default function RootLayout({
     </html>
   )
 }
+```
+
+### Step 4: Double-check your file structure
+
+Your `app` folder should have these files:
+```
+app/
+├── globals.css   ← Make sure this exists!
+├── layout.tsx
+└── page.tsx
