@@ -61,7 +61,6 @@ interface GroceryItem {
   estimatedCost?: number;
 }
 
-// Sample Recipes (10 recipes for now - you can add more)
 const SAMPLE_RECIPES: Recipe[] = [
   {
     id: '1',
@@ -70,26 +69,38 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 15,
     cookTime: 45,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Rice', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Tomatoes', amount: 4, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Red bell pepper', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Vegetable oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' }
+      { name: 'Long grain rice', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Fresh tomatoes', amount: 4, unit: 'large', category: 'Vegetables & Fruits' },
+      { name: 'Red bell peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Scotch bonnet pepper', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 2, unit: 'medium', category: 'Vegetables & Fruits' },
+      { name: 'Vegetable oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Curry powder', amount: 1, unit: 'tsp', category: 'Spices & Condiments' },
+      { name: 'Thyme', amount: 1, unit: 'tsp', category: 'Spices & Condiments' },
+      { name: 'Bay leaves', amount: 2, unit: 'pieces', category: 'Spices & Condiments' },
+      { name: 'Low-sodium chicken stock', amount: 4, unit: 'cups', category: 'Others' },
+      { name: 'Salt', amount: 0.5, unit: 'tsp', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Blend tomatoes, peppers, and half the onions until smooth',
-      'Heat oil in a pot and fry the tomato blend until oil rises',
-      'Add curry, thyme, and bay leaves',
-      'Pour in low-sodium stock and bring to boil',
-      'Add washed rice, stir, and cover to cook',
-      'Cook for 30-35 minutes until rice is tender'
+      'Wash the rice thoroughly in cold water until water runs clear. Drain and set aside.',
+      'Blend tomatoes, red bell peppers, scotch bonnet, and 1 onion together until smooth.',
+      'Heat vegetable oil in a large pot over medium heat.',
+      'Dice the remaining onion and fry in the hot oil until translucent (about 2 minutes).',
+      'Pour in the blended tomato mixture and fry for 15-20 minutes, stirring occasionally until the sauce thickens and oil rises to the top.',
+      'Add curry powder, thyme, bay leaves, and minimal salt. Stir well.',
+      'Pour in the low-sodium chicken stock and bring to a boil.',
+      'Add the washed rice and stir gently to combine.',
+      'Cover the pot with a tight-fitting lid and reduce heat to low.',
+      'Cook for 30-35 minutes without opening the lid, until rice is tender and liquid is absorbed.',
+      'Turn off heat and let it sit covered for 5 minutes.',
+      'Fluff with a fork and serve hot with fried plantains or salad.'
     ],
     nutrition: { calories: 320, protein: 6, carbs: 58, fats: 7, fiber: 2, sodium: 280, sugar: 4 },
-    tags: ['low-salt', 'vegetarian'],
+    tags: ['low-salt', 'vegetarian', 'Nigerian classic'],
     isHealthy: true,
-    healthNotes: 'Reduced salt version using low-sodium stock'
+    healthNotes: 'Reduced salt version using low-sodium stock and natural flavors from tomatoes and peppers'
   },
   {
     id: '2',
@@ -98,26 +109,38 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 20,
     cookTime: 40,
     servings: 6,
-    imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Ground egusi', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Ugwu leaves', amount: 4, unit: 'cups', category: 'Vegetables & Fruits' },
-      { name: 'Spinach', amount: 2, unit: 'cups', category: 'Vegetables & Fruits' },
-      { name: 'Stockfish', amount: 200, unit: 'g', category: 'Proteins' },
-      { name: 'Palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' }
+      { name: 'Ground egusi (melon seeds)', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Fresh ugwu leaves (pumpkin leaves)', amount: 4, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Fresh spinach', amount: 2, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Stockfish (soaked)', amount: 200, unit: 'g', category: 'Proteins' },
+      { name: 'Red palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Crayfish (ground)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Fresh pepper (blended)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
+      { name: 'Stock cubes', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Soak and cook stockfish until tender',
-      'Mix ground egusi with water to form paste',
-      'Heat palm oil, add onions and pepper',
-      'Add egusi paste in small lumps',
-      'Add stockfish and simmer',
-      'Add vegetables and cook for 5 minutes'
+      'Soak stockfish in hot water for 30 minutes, then debone and cut into small pieces.',
+      'Cook stockfish in 3 cups of water with half of the onions for 20 minutes until tender. Keep the stock.',
+      'In a bowl, mix ground egusi with 1 cup of water to form a thick paste.',
+      'Heat palm oil in a large pot over medium heat.',
+      'Add chopped onions and blended pepper, fry for 2 minutes.',
+      'Using a spoon, scoop egusi paste in small lumps into the pot. Do not stir.',
+      'Allow egusi to fry for 5-7 minutes until lumps are golden.',
+      'Add stockfish, crayfish, stock cube, and the reserved stock.',
+      'Cover and simmer for 15 minutes on low heat.',
+      'Wash and chop ugwu and spinach leaves.',
+      'Add vegetables to the soup and stir gently.',
+      'Cook for 5 more minutes until vegetables are wilted.',
+      'Taste and adjust seasoning with minimal salt if needed.',
+      'Serve hot with pounded yam, eba, or fufu.'
     ],
     nutrition: { calories: 380, protein: 18, carbs: 12, fats: 28, fiber: 5, sodium: 420, sugar: 3 },
-    tags: ['high-protein', 'traditional'],
+    tags: ['high-protein', 'traditional', 'nutritious'],
     isHealthy: true,
-    healthNotes: 'Rich in vegetables and protein'
+    healthNotes: 'Rich in vegetables and protein with moderate palm oil for heart health'
   },
   {
     id: '3',
@@ -126,52 +149,79 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 15,
     cookTime: 25,
     servings: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Tilapia', amount: 2, unit: 'pieces', category: 'Proteins' },
-      { name: 'Bell peppers', amount: 3, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Scotch bonnet', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
-      { name: 'Olive oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' }
+      { name: 'Fresh tilapia or mackerel', amount: 2, unit: 'whole fish', category: 'Proteins' },
+      { name: 'Red bell peppers', amount: 3, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Scotch bonnet peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 1, unit: 'large', category: 'Vegetables & Fruits' },
+      { name: 'Fresh garlic', amount: 3, unit: 'cloves', category: 'Spices & Condiments' },
+      { name: 'Fresh ginger', amount: 1, unit: 'inch', category: 'Spices & Condiments' },
+      { name: 'Olive oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Lemon juice', amount: 2, unit: 'tbsp', category: 'Others' },
+      { name: 'Black pepper', amount: 1, unit: 'tsp', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Clean fish and season lightly',
-      'Grill fish for 10-12 minutes each side',
-      'Blend peppers, onions, garlic, and ginger',
-      'Heat oil and fry pepper blend',
-      'Pour sauce over grilled fish'
+      'Clean fish thoroughly, remove scales and guts. Rinse under cold water.',
+      'Make 3 diagonal cuts on each side of the fish.',
+      'Mix 1 tbsp olive oil, lemon juice, minced garlic, black pepper, and minimal salt.',
+      'Rub this marinade all over the fish and inside the cuts. Let it marinate for 15 minutes.',
+      'Preheat your grill or oven to 200°C (400°F).',
+      'Place fish on grill or in oven and cook for 10-12 minutes on each side until skin is crispy.',
+      'While fish cooks, prepare pepper sauce: Roughly chop bell peppers, scotch bonnet, onions, ginger, and garlic.',
+      'Blend all vegetables together until smooth (you can add 2 tbsp water if needed).',
+      'Heat 1 tbsp olive oil in a pan over medium heat.',
+      'Pour blended pepper mixture into pan and fry for 8-10 minutes, stirring occasionally.',
+      'Season with minimal salt and cook until oil rises to the top.',
+      'Remove grilled fish from heat and place on a serving plate.',
+      'Pour hot pepper sauce over the fish or serve on the side.',
+      'Garnish with lemon slices and serve with boiled yam or salad.'
     ],
     nutrition: { calories: 280, protein: 35, carbs: 8, fats: 12, fiber: 2, sodium: 180, sugar: 5 },
-    tags: ['low-salt', 'high-protein', 'grilled'],
+    tags: ['low-salt', 'high-protein', 'grilled', 'omega-3'],
     isHealthy: true,
-    healthNotes: 'Excellent protein source, grilled not fried'
+    healthNotes: 'Excellent lean protein source, grilled not fried, rich in omega-3 fatty acids'
   },
   {
     id: '4',
-    name: 'Moi Moi',
+    name: 'Moi Moi (Bean Pudding)',
     category: 'breakfast',
     prepTime: 30,
     cookTime: 45,
     servings: 8,
-    imageUrl: 'https://images.unsplash.com/photo-1512058564366-18510be2db19?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1606314378876-b84c290b3b0c?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Peeled beans', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Red bell pepper', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
+      { name: 'Black-eyed beans (peeled)', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Red bell peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
+      { name: 'Scotch bonnet pepper', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
       { name: 'Vegetable oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Eggs', amount: 3, unit: 'pieces', category: 'Proteins' }
+      { name: 'Crayfish (ground)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Hard-boiled eggs', amount: 3, unit: 'pieces', category: 'Proteins' },
+      { name: 'Stock cubes', amount: 2, unit: 'pieces', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Blend beans with peppers and onions',
-      'Add minimal salt and oil',
-      'Whisk mixture until fluffy',
-      'Pour into greased containers',
-      'Steam for 45 minutes'
+      'If beans are not already peeled, soak them in water for 10 minutes, then rub between hands to remove skins.',
+      'Blend beans with red peppers, onions, scotch bonnet, and 1 cup of water until very smooth. Blend in batches if needed.',
+      'Pour blended mixture into a large bowl.',
+      'Add vegetable oil, ground crayfish, crumbled stock cubes, and minimal salt.',
+      'Whisk mixture vigorously for 5 minutes until it becomes light and fluffy.',
+      'Prepare your moi moi containers: use small bowls, ramekins, or banana leaves.',
+      'Grease containers lightly with oil.',
+      'Fill each container halfway with the bean mixture.',
+      'Place a quarter of hard-boiled egg in the center of each.',
+      'Fill to 3/4 full with more bean mixture.',
+      'Cover each container with foil or leaves.',
+      'Place containers in a large pot with 2 inches of water at the bottom.',
+      'Cover pot and steam on medium heat for 45 minutes. Add more water if needed.',
+      'Check if done by inserting a toothpick - it should come out clean.',
+      'Allow to cool for 5 minutes before serving.',
+      'Serve warm with pap (ogi), bread, or custard.'
     ],
     nutrition: { calories: 220, protein: 12, carbs: 28, fats: 6, fiber: 8, sodium: 160, sugar: 2 },
-    tags: ['low-salt', 'high-fiber'],
+    tags: ['low-salt', 'high-fiber', 'protein-rich'],
     isHealthy: true,
-    healthNotes: 'High in protein and fiber'
+    healthNotes: 'High in plant-based protein and fiber, minimal salt, nutrient-dense breakfast'
   },
   {
     id: '5',
@@ -180,96 +230,156 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 10,
     cookTime: 50,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1587563871167-1ee9c731aefb?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1615484477778-ca3b77940c25?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Honey beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Honey beans or brown beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
       { name: 'Ripe plantains', amount: 4, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' }
+      { name: 'Red palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
+      { name: 'Fresh pepper (blended)', amount: 1, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Stock cube', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Boil beans until soft',
-      'Peel and cut plantains',
-      'Add plantains to beans',
-      'Heat palm oil with onions',
-      'Pour oil over beans and plantain'
+      'Rinse beans thoroughly and remove any stones or debris.',
+      'Place beans in a pot with 6 cups of water.',
+      'Bring to a boil, then reduce heat and cook for 35-40 minutes until beans are soft but not mushy.',
+      'While beans cook, peel ripe plantains and cut into chunks (about 2 inches each).',
+      'When beans are soft, add cut plantains to the pot.',
+      'Add crumbled stock cube and minimal salt to taste.',
+      'Cook together for 10-12 more minutes until plantains are soft.',
+      'The water should be almost absorbed - if too much water remains, cook uncovered for a few minutes.',
+      'In a separate small pan, heat palm oil.',
+      'Add chopped onions and blended pepper to the oil.',
+      'Fry for 2-3 minutes until fragrant.',
+      'Pour the hot oil mixture over the beans and plantain.',
+      'Stir gently to combine without mashing the plantains too much.',
+      'Let it sit for 2 minutes to absorb flavors.',
+      'Serve hot as a complete meal.'
     ],
     nutrition: { calories: 340, protein: 14, carbs: 52, fats: 8, fiber: 12, sodium: 120, sugar: 18 },
-    tags: ['vegetarian', 'high-fiber'],
+    tags: ['vegetarian', 'high-fiber', 'budget-friendly'],
     isHealthy: true,
-    healthNotes: 'Excellent fiber source'
+    healthNotes: 'Excellent source of plant-based protein and fiber, natural sweetness from ripe plantains'
   },
   {
     id: '6',
-    name: 'Efo Riro',
+    name: 'Efo Riro (Spinach Stew)',
     category: 'lunch',
     prepTime: 15,
     cookTime: 30,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Spinach', amount: 6, unit: 'cups', category: 'Vegetables & Fruits' },
-      { name: 'Lean beef', amount: 300, unit: 'g', category: 'Proteins' },
-      { name: 'Palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' }
+      { name: 'Fresh spinach or efo shoko', amount: 6, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Lean beef or goat meat', amount: 300, unit: 'g', category: 'Proteins' },
+      { name: 'Red palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Fresh tomatoes (blended)', amount: 3, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Red bell peppers (blended)', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 1, unit: 'large', category: 'Vegetables & Fruits' },
+      { name: 'Crayfish (ground)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Stock cube', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Cook lean beef until tender',
-      'Heat palm oil, fry onions',
-      'Add meat and cook',
-      'Add chopped spinach and stir'
+      'Wash and cut lean meat into small pieces.',
+      'Season meat with half the onions (diced), stock cube, and minimal salt.',
+      'Cook meat in 2 cups of water for 20 minutes until tender. Keep the stock.',
+      'Blend tomatoes and peppers together until smooth.',
+      'Heat palm oil in a large pot over medium heat.',
+      'Add remaining chopped onions and fry for 1 minute.',
+      'Pour in blended tomato mixture and fry for 10 minutes, stirring frequently.',
+      'Add cooked meat with its stock to the tomato sauce.',
+      'Add ground crayfish and stir well.',
+      'Simmer for 5 minutes to blend flavors.',
+      'Wash spinach thoroughly and chop roughly.',
+      'Add chopped spinach to the pot and stir.',
+      'Cook for only 3-5 minutes to maintain bright green color and nutrients.',
+      'Taste and adjust seasoning if needed.',
+      'Turn off heat immediately when spinach is wilted.',
+      'Serve hot with rice, yam, or any swallow of choice.'
     ],
     nutrition: { calories: 290, protein: 22, carbs: 14, fats: 16, fiber: 4, sodium: 340, sugar: 6 },
-    tags: ['high-protein', 'iron-rich'],
+    tags: ['high-protein', 'iron-rich', 'traditional'],
     isHealthy: true,
-    healthNotes: 'Rich in iron and vitamins'
+    healthNotes: 'Rich in iron, vitamins, and minerals from spinach with lean protein'
   },
   {
     id: '7',
-    name: 'Yam Porridge',
+    name: 'Yam Porridge (Asaro)',
     category: 'lunch',
     prepTime: 15,
     cookTime: 30,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1628773822990-202c13f982e5?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Yam', amount: 1, unit: 'medium tuber', category: 'Grains & Cereals' },
-      { name: 'Palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Smoked fish', amount: 150, unit: 'g', category: 'Proteins' }
+      { name: 'White yam', amount: 1, unit: 'medium tuber', category: 'Grains & Cereals' },
+      { name: 'Red palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Fresh tomatoes (blended)', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Fresh pepper (blended)', amount: 1, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Smoked fish', amount: 150, unit: 'g', category: 'Proteins' },
+      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
+      { name: 'Fresh spinach', amount: 2, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Stock cube', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Peel and cut yam',
-      'Boil yam until soft',
-      'Add palm oil and fish',
-      'Mash slightly'
+      'Peel yam and cut into medium-sized chunks (about 2 inches).',
+      'Rinse yam pieces in cold water.',
+      'Place yam in a pot and add enough water to just cover it.',
+      'Add half of the onions (chopped) and bring to a boil.',
+      'Cook for 10-15 minutes until yam is partially soft (not fully cooked).',
+      'Clean smoked fish, remove bones, and break into pieces.',
+      'Add palm oil, blended tomatoes, and blended pepper to the yam.',
+      'Add smoked fish pieces and stock cube.',
+      'Stir gently and continue cooking for 10 more minutes.',
+      'As yam cooks, it will become very soft and begin to break down.',
+      'Use a wooden spoon to mash some of the yam pieces to thicken the porridge.',
+      'Add remaining chopped onions and spinach.',
+      'Stir and cook for 3 more minutes.',
+      'The consistency should be thick and porridge-like.',
+      'Taste and adjust seasoning with minimal salt.',
+      'Serve hot as a complete meal.'
     ],
     nutrition: { calories: 380, protein: 14, carbs: 58, fats: 10, fiber: 6, sodium: 380, sugar: 4 },
-    tags: ['comfort-food', 'filling'],
+    tags: ['comfort-food', 'filling', 'traditional'],
     isHealthy: true,
-    healthNotes: 'Good energy source'
+    healthNotes: 'Good source of complex carbohydrates for sustained energy with vegetables and protein'
   },
   {
     id: '8',
-    name: 'Akara',
+    name: 'Akara (Bean Cakes)',
     category: 'breakfast',
     prepTime: 20,
     cookTime: 15,
     servings: 6,
-    imageUrl: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=400&h=300&fit=crop',
     ingredients: [
-      { name: 'Peeled beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
-      { name: 'Vegetable oil', amount: 2, unit: 'cups', category: 'Oils & Fats' }
+      { name: 'Black-eyed beans (peeled)', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Onions', amount: 1, unit: 'small', category: 'Vegetables & Fruits' },
+      { name: 'Scotch bonnet pepper', amount: 1, unit: 'small piece', category: 'Vegetables & Fruits' },
+      { name: 'Vegetable oil for frying', amount: 3, unit: 'cups', category: 'Oils & Fats' },
+      { name: 'Salt', amount: 0.5, unit: 'tsp', category: 'Spices & Condiments' }
     ],
     instructions: [
-      'Blend beans until smooth',
-      'Add onions and pepper',
-      'Whip mixture until fluffy',
-      'Fry in hot oil'
+      'Soak beans in water for 10 minutes to soften the skin.',
+      'Rub beans between your palms to remove all the skins.',
+      'Rinse beans several times until all skins float away.',
+      'Blend beans with very little water (just enough to blend) until very smooth and fluffy.',
+      'Pour blended beans into a large bowl.',
+      'Finely chop onions and pepper, add to the bean paste.',
+      'Add minimal salt to taste.',
+      'Whisk the mixture vigorously in one direction for 3-5 minutes. The mixture should be thick and fluffy.',
+      'Test consistency by dropping a small amount in cold water - it should float.',
+      'Heat vegetable oil in a deep pot over medium-high heat.',
+      'Oil is ready when a small drop of batter sizzles immediately.',
+      'Using a spoon, scoop bean mixture and gently drop into hot oil.',
+      'Fry 4-5 balls at a time, don't overcrowd the pot.',
+      'Fry for 3-4 minutes until golden brown, turning occasionally.',
+      'Remove with a slotted spoon and drain on paper towels.',
+      'Serve hot with pap (ogi), custard, or bread.'
     ],
     nutrition: { calories: 180, protein: 10, carbs: 20, fats: 6, fiber: 6, sodium: 140, sugar: 1 },
-    tags: ['low-salt', 'protein-rich'],
+    tags: ['low-salt', 'protein-rich', 'breakfast'],
     isHealthy: true,
-    healthNotes: 'Good protein source'
+    healthNotes: 'Good source of plant-based protein and fiber with minimal salt'
   },
   {
     id: '9',
@@ -278,22 +388,35 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 30,
     cookTime: 20,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=300&fit=crop',
     ingredients: [
       { name: 'Chicken breast', amount: 500, unit: 'g', category: 'Proteins' },
-      { name: 'Suya spice', amount: 3, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Vegetable oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' }
+      { name: 'Suya spice (yaji)', amount: 3, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Groundnut powder (roasted)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Vegetable oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Onions (sliced)', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' }
     ],
     instructions: [
-      'Cut chicken into strips',
-      'Marinate with suya spice',
-      'Thread onto skewers',
-      'Grill for 8-10 minutes each side'
+      'Cut chicken breast into long strips about 1 inch wide.',
+      'In a bowl, mix suya spice with vegetable oil to form a paste.',
+      'Add chicken strips to the spice paste and massage well to coat evenly.',
+      'Cover and marinate in the refrigerator for at least 20 minutes (or up to 2 hours).',
+      'If using wooden skewers, soak them in water for 10 minutes.',
+      'Thread marinated chicken strips onto skewers.',
+      'Preheat your grill, oven (200°C), or grill pan over medium-high heat.',
+      'Place chicken skewers on the grill.',
+      'Grill for 8-10 minutes on the first side without moving.',
+      'Flip skewers and grill for another 8-10 minutes until chicken is fully cooked.',
+      'Chicken is done when juices run clear and internal temperature reaches 75°C.',
+      'In the last 2 minutes, sprinkle groundnut powder over the chicken.',
+      'Remove from heat and let rest for 3 minutes.',
+      'Serve hot with sliced onions, tomatoes, and cabbage on the side.',
+      'Optional: Serve with extra suya spice for dipping.'
     ],
     nutrition: { calories: 240, protein: 32, carbs: 6, fats: 10, fiber: 2, sodium: 320, sugar: 2 },
-    tags: ['high-protein', 'grilled'],
+    tags: ['high-protein', 'grilled', 'low-carb'],
     isHealthy: true,
-    healthNotes: 'Lean protein, grilled'
+    healthNotes: 'Lean protein grilled instead of fried, controlled spice levels for flavor without excess sodium'
   },
   {
     id: '10',
@@ -302,24 +425,40 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 10,
     cookTime: 25,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=400',
+    imageUrl: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&h=300&fit=crop',
     ingredients: [
       { name: 'Fresh catfish', amount: 4, unit: 'pieces', category: 'Proteins' },
       { name: 'Pepper soup spice', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Scotch bonnet', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' }
+      { name: 'Scotch bonnet peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
+      { name: 'Fresh garlic', amount: 3, unit: 'cloves', category: 'Spices & Condiments' },
+      { name: 'Fresh ginger', amount: 1, unit: 'inch', category: 'Spices & Condiments' },
+      { name: 'Scent leaves (optional)', amount: 10, unit: 'leaves', category: 'Vegetables & Fruits' }
     ],
     instructions: [
-      'Clean fish thoroughly',
-      'Boil water with spices',
-      'Add fish and cook for 15-20 minutes',
-      'Serve hot'
+      'Clean catfish thoroughly by rubbing with salt and lemon, then rinse well.',
+      'Cut fish into medium-sized pieces if not already cut.',
+      'Peel and slice ginger and garlic.',
+      'Chop onions and scotch bonnet peppers.',
+      'In a pot, add 6 cups of water and bring to a boil.',
+      'Add sliced ginger, garlic, half the onions, and scotch bonnet peppers.',
+      'Add pepper soup spice and minimal salt.',
+      'Boil for 5 minutes to infuse flavors into the broth.',
+      'Gently add fish pieces to the boiling water.',
+      'Reduce heat to medium and cook for 15-20 minutes.',
+      'Do not stir too much to prevent fish from breaking apart.',
+      'Add remaining chopped onions.',
+      'If using scent leaves, tear them and add in the last 2 minutes.',
+      'Taste and adjust seasoning if needed.',
+      'Serve hot as soup alone or with boiled yam, plantains, or rice.'
     ],
     nutrition: { calories: 180, protein: 28, carbs: 4, fats: 6, fiber: 1, sodium: 280, sugar: 2 },
-    tags: ['low-carb', 'high-protein'],
+    tags: ['low-carb', 'high-protein', 'light', 'warming'],
     isHealthy: true,
-    healthNotes: 'Low calorie, high protein'
+    healthNotes: 'Low calorie, high protein, perfect for light dinner or when feeling under the weather'
   }
 ];
+
 
 // Context
 const AppContext = createContext<any>(null);
