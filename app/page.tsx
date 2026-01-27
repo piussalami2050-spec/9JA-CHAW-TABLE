@@ -1,10 +1,16 @@
-```jsx
 'use client';
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { Calendar, ChefHat, ShoppingCart, TrendingUp, Search, Clock, Users, Utensils, Leaf, Home, Check, AlertTriangle, X, Plus, ChevronLeft, ChevronRight, Save, Download, Share2, Edit, Trash2, BookOpen, Heart, Filter, Moon, Sun } from 'lucide-react';
+import { 
+  Calendar, ChefHat, ShoppingCart, TrendingUp, Search, Clock, Users, Utensils, 
+  Leaf, Home, Check, AlertTriangle, X, Plus, ChevronLeft, ChevronRight, 
+  Heart, Moon, Sun 
+} from 'lucide-react';
 
-// Types
+// ────────────────────────────────────────────────
+// TYPES
+// ────────────────────────────────────────────────
+
 interface Ingredient {
   name: string;
   amount: number;
@@ -42,19 +48,17 @@ interface Recipe {
 interface MealPlan {
   id: string;
   name: string;
-  startDate: string;
-  meals: {
-    [day: string]: {
-      breakfast?: Recipe;
-      lunch?: Recipe;
-      dinner?: Recipe;
-      snacks?: Recipe[];
-    };
-  };
+  startDate: string; // YYYY-MM-DD (Monday of the week)
+  meals: Record<string, {
+    breakfast?: Recipe;
+    lunch?: Recipe;
+    dinner?: Recipe;
+    snacks?: Recipe[];
+  }>;
 }
 
 interface GroceryItem {
-  ingredient: string;
+  name: string;
   amount: number;
   unit: string;
   category: string;
@@ -62,7 +66,10 @@ interface GroceryItem {
   estimatedCost?: number;
 }
 
-// Updated Sample Recipes with correct images (using tool results and approximations)
+// ────────────────────────────────────────────────
+// SAMPLE RECIPES (all 11)
+// ────────────────────────────────────────────────
+
 const SAMPLE_RECIPES: Recipe[] = [
   {
     id: '1',
@@ -127,7 +134,7 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 15,
     cookTime: 25,
     servings: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400', // Kept original as tool result was incorrect
+    imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400',
     ingredients: [
       { name: 'Tilapia', amount: 2, unit: 'pieces', category: 'Proteins' },
       { name: 'Bell peppers', amount: 3, unit: 'pieces', category: 'Vegetables & Fruits' },
@@ -154,7 +161,7 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 30,
     cookTime: 45,
     servings: 8,
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Ofada_Rice_and_stew_on_leaf.jpg', // Tool result, approximate
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Ofada_Rice_and_stew_on_leaf.jpg',
     ingredients: [
       { name: 'Peeled beans', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
       { name: 'Red bell pepper', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
@@ -231,7 +238,7 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 15,
     cookTime: 30,
     servings: 4,
-    imageUrl: 'https://images.pexels.com/photos/32000626/pexels-photo-32000626.jpeg?cs=srgb&dl=pexels-najim-kurfi-483155737-32000626.jpg&fm=jpg', // Approximate
+    imageUrl: 'https://images.pexels.com/photos/32000626/pexels-photo-32000626.jpeg?cs=srgb&dl=pexels-najim-kurfi-483155737-32000626.jpg&fm=jpg',
     ingredients: [
       { name: 'Yam', amount: 1, unit: 'medium tuber', category: 'Grains & Cereals' },
       { name: 'Palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
@@ -255,7 +262,7 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 20,
     cookTime: 15,
     servings: 6,
-    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Man_at_Work_in_Africa_-_Man_Selling_Roasted_Meat_Popular_Called_Suya_in_Africa.jpg', // Incorrect, but tool result
+    imageUrl: 'https://images.unsplash.com/photo-1601001435828-419e309a20e7?w=400',
     ingredients: [
       { name: 'Peeled beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
       { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
@@ -303,7 +310,7 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 10,
     cookTime: 25,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=400', // Kept original as no tool result
+    imageUrl: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=400',
     ingredients: [
       { name: 'Fresh catfish', amount: 4, unit: 'pieces', category: 'Proteins' },
       { name: 'Pepper soup spice', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
@@ -320,7 +327,6 @@ const SAMPLE_RECIPES: Recipe[] = [
     isHealthy: true,
     healthNotes: 'Low calorie, high protein'
   },
-  // Added Pounded Yam as per user request
   {
     id: '11',
     name: 'Pounded Yam',
@@ -328,7 +334,7 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 10,
     cookTime: 20,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400', // Approximate from similar
+    imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400',
     ingredients: [
       { name: 'Yam', amount: 1, unit: 'large tuber', category: 'Grains & Cereals' },
       { name: 'Water', amount: 4, unit: 'cups', category: 'Other' }
@@ -346,60 +352,56 @@ const SAMPLE_RECIPES: Recipe[] = [
   }
 ];
 
-// Context
-const AppContext = createContext<any>(null);
+// ────────────────────────────────────────────────
+// CONTEXT
+// ────────────────────────────────────────────────
+
+interface AppContextType {
+  recipes: Recipe[];
+  mealPlan: MealPlan | null;
+  setMealPlan: React.Dispatch<React.SetStateAction<MealPlan | null>>;
+  currentPage: string;
+  setCurrentPage: React.Dispatch<React.SetStateAction<string>>;
+  theme: 'light' | 'dark';
+  toggleTheme: () => void;
+}
+
+const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const AppProvider = ({ children }: { children: React.ReactNode }) => {
-  const [recipes, setRecipes] = useState<Recipe[]>(SAMPLE_RECIPES);
+  const [recipes] = useState<Recipe[]>(SAMPLE_RECIPES);
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
   const [currentPage, setCurrentPage] = useState('home');
   const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
+    if (typeof window === 'undefined') return;
+    try {
       const stored = localStorage.getItem('nigerianMealPlanner');
       if (stored) {
-        try {
-          const data = JSON.parse(stored);
-          setRecipes(data.recipes || SAMPLE_RECIPES);
-          setMealPlan(data.mealPlan || null);
-          setTheme(data.theme || 'light');
-        } catch (e) {
-          console.error('Error loading data:', e);
-        }
+        const data = JSON.parse(stored);
+        setMealPlan(data.mealPlan || null);
+        setTheme(data.theme || 'light');
       }
+    } catch (e) {
+      console.error('Failed to load data', e);
     }
   }, []);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        localStorage.setItem('nigerianMealPlanner', JSON.stringify({ recipes, mealPlan, theme }));
-      } catch (e) {
-        console.error('Error saving data:', e);
-      }
-    }
-  }, [recipes, mealPlan, theme]);
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('nigerianMealPlanner', JSON.stringify({ mealPlan, theme }));
+  }, [mealPlan, theme]);
 
-  const toggleFavorite = (recipeId: string) => {
-    setRecipes(recipes.map(r => 
-      r.id === recipeId ? { ...r, isFavorite: !r.isFavorite } : r
-    ));
-  };
-
-  const toggleTheme = () => {
-    setTheme(prev => prev === 'light' ? 'dark' : 'light');
-  };
+  const toggleTheme = () => setTheme(prev => prev === 'light' ? 'dark' : 'light');
 
   return (
-    <AppContext.Provider value={{ 
-      recipes, 
-      setRecipes, 
-      mealPlan, 
-      setMealPlan, 
-      currentPage, 
+    <AppContext.Provider value={{
+      recipes,
+      mealPlan,
+      setMealPlan,
+      currentPage,
       setCurrentPage,
-      toggleFavorite,
       theme,
       toggleTheme
     }}>
@@ -408,556 +410,525 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Header Component
+// ────────────────────────────────────────────────
+// HEADER
+// ────────────────────────────────────────────────
+
 const Header = () => {
-  const { currentPage, setCurrentPage, theme, toggleTheme } = useContext(AppContext);
-  
+  const ctx = useContext(AppContext)!;
+  const { currentPage, setCurrentPage, theme, toggleTheme } = ctx;
+
   return (
-    <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg sticky top-0 z-50">
+    <header className="bg-gradient-to-r from-emerald-700 to-emerald-500 text-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setCurrentPage('home')}>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentPage('home')}>
             <ChefHat className="w-8 h-8" />
             <h1 className="text-2xl font-bold">Nigerian Meal Planner</h1>
           </div>
-          <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-emerald-700">
+          <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-emerald-600 transition">
             {theme === 'light' ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
           </button>
         </div>
-        <nav className="flex space-x-2 overflow-x-auto pb-2">
+
+        <nav className="flex gap-2 mt-4 overflow-x-auto">
           {[
             { id: 'home', icon: Home, label: 'Home' },
             { id: 'recipes', icon: Utensils, label: 'Recipes' },
             { id: 'planner', icon: Calendar, label: 'Planner' },
-            { id: 'nutrition', icon: TrendingUp, label: 'Nutrition' },
-            { id: 'grocery', icon: ShoppingCart, label: 'Grocery' }
-          ].map(({ id, icon: Icon, label }) => (
+            { id: 'grocery', icon: ShoppingCart, label: 'Grocery' },
+          ].map(item => (
             <button
-              key={id}
-              onClick={() => setCurrentPage(id)}
-              className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-colors whitespace-nowrap ${
-                currentPage === id ? 'bg-white text-emerald-600' : 'bg-emerald-700 hover:bg-emerald-600'
+              key={item.id}
+              onClick={() => setCurrentPage(item.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap ${
+                currentPage === item.id
+                  ? 'bg-white text-emerald-700'
+                  : 'bg-emerald-600 hover:bg-emerald-500'
               }`}
             >
-              <Icon className="w-4 h-4" />
-              <span className="text-sm font-medium">{label}</span>
+              <item.icon className="w-4 h-4" />
+              {item.label}
             </button>
           ))}
         </nav>
       </div>
-    </div>
+    </header>
   );
 };
 
-// Modal Component for Recipe Details
+// ────────────────────────────────────────────────
+// RECIPE MODAL
+// ────────────────────────────────────────────────
+
 const RecipeModal = ({ recipe, onClose }: { recipe: Recipe | null; onClose: () => void }) => {
   if (!recipe) return null;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full m-4 max-h-[90vh] overflow-y-auto p-6">
-        <div className="flex justify-between items-start mb-4">
+    <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="sticky top-0 bg-white dark:bg-gray-800 border-b dark:border-gray-700 px-6 py-4 flex justify-between items-center z-10">
           <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{recipe.name}</h2>
-          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
-            <X className="w-6 h-6" />
+          <button onClick={onClose}>
+            <X className="w-6 h-6 text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100" />
           </button>
         </div>
-        <img src={recipe.imageUrl} alt={recipe.name} className="w-full h-64 object-cover rounded-lg mb-4" />
-        <div className="grid grid-cols-2 gap-4 mb-4 text-sm text-gray-600 dark:text-gray-300">
-          <div><Clock className="inline w-4 h-4 mr-1" /> Prep: {recipe.prepTime} min | Cook: {recipe.cookTime} min</div>
-          <div><Users className="inline w-4 h-4 mr-1" /> Servings: {recipe.servings}</div>
-        </div>
-        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Ingredients</h3>
-        <ul className="list-disc pl-5 mb-4 text-gray-700 dark:text-gray-300">
-          {recipe.ingredients.map((ing, i) => (
-            <li key={i}>{ing.amount} {ing.unit} {ing.name}</li>
-          ))}
-        </ul>
-        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Instructions</h3>
-        <ol className="list-decimal pl-5 mb-4 text-gray-700 dark:text-gray-300">
-          {recipe.instructions.map((step, i) => (
-            <li key={i}>{step}</li>
-          ))}
-        </ol>
-        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Nutrition (per serving)</h3>
-        <div className="grid grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-300">
-          <div>Calories: {recipe.nutrition.calories}</div>
-          <div>Protein: {recipe.nutrition.protein}g</div>
-          <div>Carbs: {recipe.nutrition.carbs}g</div>
-          <div>Fats: {recipe.nutrition.fats}g</div>
-          <div>Fiber: {recipe.nutrition.fiber}g</div>
-          <div>Sodium: {recipe.nutrition.sodium}mg</div>
-          <div>Sugar: {recipe.nutrition.sugar}g</div>
-        </div>
-        {recipe.healthNotes && (
-          <div className="mt-4 bg-emerald-50 dark:bg-emerald-900 p-3 rounded text-sm text-emerald-800 dark:text-emerald-200">
-            <AlertTriangle className="w-4 h-4 inline mr-1" />
-            {recipe.healthNotes}
+        <div className="p-6">
+          <img
+            src={recipe.imageUrl}
+            alt={recipe.name}
+            className="w-full h-64 object-cover rounded-lg mb-6"
+            onError={e => (e.currentTarget.src = `https://via.placeholder.com/600x400?text=${encodeURIComponent(recipe.name)}`)}
+          />
+          <div className="grid grid-cols-2 gap-4 mb-6 text-sm text-gray-600 dark:text-gray-300">
+            <div><Clock className="inline mr-1" /> Prep: {recipe.prepTime} min | Cook: {recipe.cookTime} min</div>
+            <div><Users className="inline mr-1" /> {recipe.servings} servings</div>
           </div>
-        )}
+
+          <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Ingredients</h3>
+          <ul className="list-disc pl-5 mb-6 text-gray-700 dark:text-gray-300">
+            {recipe.ingredients.map((ing, i) => (
+              <li key={i}>{ing.amount} {ing.unit} {ing.name}</li>
+            ))}
+          </ul>
+
+          <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Instructions</h3>
+          <ol className="list-decimal pl-5 mb-6 text-gray-700 dark:text-gray-300 space-y-1">
+            {recipe.instructions.map((step, i) => <li key={i}>{step}</li>)}
+          </ol>
+
+          <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Nutrition (per serving)</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+            <div>Calories: {recipe.nutrition.calories}</div>
+            <div>Protein: {recipe.nutrition.protein}g</div>
+            <div>Carbs: {recipe.nutrition.carbs}g</div>
+            <div>Fats: {recipe.nutrition.fats}g</div>
+            <div>Fiber: {recipe.nutrition.fiber}g</div>
+            <div>Sodium: {recipe.nutrition.sodium}mg</div>
+            <div>Sugar: {recipe.nutrition.sugar}g</div>
+          </div>
+
+          {recipe.healthNotes && (
+            <div className="mt-6 p-4 bg-emerald-50 dark:bg-emerald-900/30 rounded-lg">
+              <AlertTriangle className="inline mr-2 text-emerald-600 dark:text-emerald-400" />
+              <span className="text-emerald-800 dark:text-emerald-200">{recipe.healthNotes}</span>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );
 };
 
-// HomePage Component
+// ────────────────────────────────────────────────
+// HOMEPAGE
+// ────────────────────────────────────────────────
+
 const HomePage = () => {
-  const { recipes, setCurrentPage, theme } = useContext(AppContext);
+  const ctx = useContext(AppContext)!;
+  const { recipes, setCurrentPage } = ctx;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Welcome to Nigerian Meal Planner</h2>
-      
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Total Recipes</h3>
-            <Utensils className="w-6 h-6 text-emerald-600" />
-          </div>
-          <p className="text-3xl font-bold text-emerald-600">{recipes.length}</p>
+    <main className="max-w-7xl mx-auto px-4 py-10">
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Welcome</h2>
+
+      <div className="grid md:grid-cols-3 gap-6 mb-10">
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-l-4 border-emerald-500">
+          <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Total Recipes</h3>
+          <p className="text-4xl font-bold text-emerald-600 mt-2">{recipes.length}</p>
         </div>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-orange-500">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Healthy Recipes</h3>
-            <Leaf className="w-6 h-6 text-orange-600" />
-          </div>
-          <p className="text-3xl font-bold text-orange-600">
-            {recipes.filter(r => r.isHealthy).length}
-          </p>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-l-4 border-green-500">
+          <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Healthy Recipes</h3>
+          <p className="text-4xl font-bold text-green-600 mt-2">{recipes.filter(r => r.isHealthy).length}</p>
         </div>
-        
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-lime-500">
-          <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Low Salt</h3>
-            <Check className="w-6 h-6 text-lime-600" />
-          </div>
-          <p className="text-3xl font-bold text-lime-600">
-            {recipes.filter(r => r.nutrition.sodium < 300).length}
-          </p>
+        <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md border-l-4 border-lime-500">
+          <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300">Low Sodium</h3>
+          <p className="text-4xl font-bold text-lime-600 mt-2">{recipes.filter(r => r.nutrition.sodium < 300).length}</p>
         </div>
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        <button
-          onClick={() => setCurrentPage('recipes')}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
-        >
-          <Utensils className="w-8 h-8 text-emerald-600 mb-2" />
-          <h4 className="font-bold text-gray-900 dark:text-white">Browse Recipes</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Explore {recipes.length} Nigerian recipes</p>
+        <button onClick={() => setCurrentPage('recipes')} className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition text-left">
+          <Utensils className="w-10 h-10 text-emerald-600 mb-4" />
+          <h4 className="text-xl font-bold text-gray-900 dark:text-white">Browse Recipes</h4>
+          <p className="text-gray-600 dark:text-gray-400">Discover Nigerian classics</p>
         </button>
-        
-        <button
-          onClick={() => setCurrentPage('planner')}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
-        >
-          <Calendar className="w-8 h-8 text-orange-600 mb-2" />
-          <h4 className="font-bold text-gray-900 dark:text-white">Plan Week</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Create meal plan</p>
+        <button onClick={() => setCurrentPage('planner')} className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition text-left">
+          <Calendar className="w-10 h-10 text-orange-600 mb-4" />
+          <h4 className="text-xl font-bold text-gray-900 dark:text-white">Plan Meals</h4>
+          <p className="text-gray-600 dark:text-gray-400">Create your weekly plan</p>
         </button>
-        
-        <button
-          onClick={() => setCurrentPage('grocery')}
-          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
-        >
-          <ShoppingCart className="w-8 h-8 text-lime-600 mb-2" />
-          <h4 className="font-bold text-gray-900 dark:text-white">Grocery List</h4>
-          <p className="text-sm text-gray-600 dark:text-gray-400">Auto-generate list</p>
+        <button onClick={() => setCurrentPage('grocery')} className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md hover:shadow-lg transition text-left">
+          <ShoppingCart className="w-10 h-10 text-lime-600 mb-4" />
+          <h4 className="text-xl font-bold text-gray-900 dark:text-white">Grocery List</h4>
+          <p className="text-gray-600 dark:text-gray-400">Auto-generated shopping list</p>
         </button>
       </div>
-    </div>
+    </main>
   );
 };
 
-// RecipesPage Component
-const RecipesPage = () => {
-  const { recipes, toggleFavorite } = useContext(AppContext);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
+// ────────────────────────────────────────────────
+// RECIPES PAGE
+// ────────────────────────────────────────────────
 
-  const filteredRecipes = recipes.filter((recipe: Recipe) =>
-    recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+const RecipesPage = () => {
+  const ctx = useContext(AppContext)!;
+  const { recipes } = ctx;
+
+  const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState<Recipe | null>(null);
+
+  const filtered = recipes.filter(r => r.name.toLowerCase().includes(search.toLowerCase()));
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Nigerian Recipes</h2>
-      
-      <div className="mb-6 relative">
-        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+    <main className="max-w-7xl mx-auto px-4 py-10">
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Recipes</h2>
+
+      <div className="relative mb-8 max-w-md">
+        <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
         <input
           type="text"
           placeholder="Search recipes..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="w-full pl-10 pr-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-emerald-500"
         />
       </div>
 
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredRecipes.map((recipe: Recipe) => (
-          <div 
-            key={recipe.id} 
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
-            onClick={() => setSelectedRecipe(recipe)}
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filtered.map(recipe => (
+          <div
+            key={recipe.id}
+            className="bg-white dark:bg-gray-800 rounded-xl shadow-md overflow-hidden cursor-pointer hover:shadow-lg transition"
+            onClick={() => setSelected(recipe)}
           >
-            <div className="h-48 bg-gray-200 relative">
-              <img src={recipe.imageUrl} alt={recipe.name} className="w-full h-full object-cover" />
-              <button
-                onClick={(e) => { e.stopPropagation(); toggleFavorite(recipe.id); }}
-                className="absolute top-2 right-2 bg-white dark:bg-gray-800 p-2 rounded-full shadow-md"
-              >
-                <Heart className={`w-5 h-5 ${recipe.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 dark:text-gray-500'}`} />
-              </button>
+            <div className="relative h-48">
+              <img
+                src={recipe.imageUrl}
+                alt={recipe.name}
+                className="w-full h-full object-cover"
+                onError={e => (e.currentTarget.src = 'https://via.placeholder.com/400x300?text=' + encodeURIComponent(recipe.name))}
+              />
               {recipe.isHealthy && (
-                <div className="absolute top-2 left-2 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
-                  <Leaf className="w-3 h-3 mr-1" />
-                  Healthy
+                <div className="absolute top-2 left-2 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs flex items-center gap-1">
+                  <Leaf className="w-3 h-3" /> Healthy
                 </div>
               )}
             </div>
-            
             <div className="p-4">
               <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">{recipe.name}</h3>
-              
-              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3 space-x-4">
-                <div className="flex items-center">
-                  <Clock className="w-4 h-4 mr-1" />
-                  {recipe.prepTime + recipe.cookTime}min
-                </div>
-                <div className="flex items-center">
-                  <Users className="w-4 h-4 mr-1" />
-                  {recipe.servings}
-                </div>
+              <div className="flex gap-4 text-sm text-gray-600 dark:text-gray-400 mb-3">
+                <div className="flex items-center gap-1"><Clock className="w-4 h-4" /> {recipe.prepTime + recipe.cookTime} min</div>
+                <div className="flex items-center gap-1"><Users className="w-4 h-4" /> {recipe.servings}</div>
               </div>
-              
-              <div className="border-t dark:border-gray-700 pt-3 grid grid-cols-2 gap-2 text-sm">
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">Calories:</span>
-                  <p className="font-semibold text-gray-900 dark:text-white">{recipe.nutrition.calories}</p>
-                </div>
-                <div>
-                  <span className="text-gray-600 dark:text-gray-400">Protein:</span>
-                  <p className="font-semibold text-gray-900 dark:text-white">{recipe.nutrition.protein}g</p>
-                </div>
-                <div>
-                  <span className={`${recipe.nutrition.sodium > 600 ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'}`}>
-                    Sodium:
-                  </span>
-                  <p className={`font-semibold ${recipe.nutrition.sodium > 600 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
-                    {recipe.nutrition.sodium}mg
-                    {recipe.nutrition.sodium > 600 && ' ⚠️'}
-                  </p>
-                </div>
-                <div>
-                  <span className={`${recipe.nutrition.sugar > 10 ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'}`}>
-                    Sugar:
-                  </span>
-                  <p className={`font-semibold ${recipe.nutrition.sugar > 10 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
-                    {recipe.nutrition.sugar}g
-                    {recipe.nutrition.sugar > 10 && ' ⚠️'}
-                  </p>
-                </div>
+              <div className="text-sm">
+                <span className="text-gray-600 dark:text-gray-400">Calories: </span>
+                <span className="font-semibold text-gray-900 dark:text-white">{recipe.nutrition.calories}</span>
               </div>
-
-              {recipe.healthNotes && (
-                <div className="mt-3 bg-emerald-50 dark:bg-emerald-900 p-2 rounded text-xs text-emerald-800 dark:text-emerald-200">
-                  <AlertTriangle className="w-3 h-3 inline mr-1" />
-                  {recipe.healthNotes}
-                </div>
-              )}
             </div>
           </div>
         ))}
       </div>
-      <RecipeModal recipe={selectedRecipe} onClose={() => setSelectedRecipe(null)} />
-    </div>
+
+      <RecipeModal recipe={selected} onClose={() => setSelected(null)} />
+    </main>
   );
 };
 
-// MealPlannerPage Component (Working Calendar)
+// ────────────────────────────────────────────────
+// MEAL PLANNER PAGE
+// ────────────────────────────────────────────────
+
 const MealPlannerPage = () => {
-  const { recipes, mealPlan, setMealPlan } = useContext(AppContext);
-  const [startDate, setStartDate] = useState(new Date());
-  const [selectedDay, setSelectedDay] = useState<string | null>(null);
-  const [selectedMealType, setSelectedMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snacks' | null>(null);
-  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+  const ctx = useContext(AppContext)!;
+  const { recipes, mealPlan, setMealPlan } = ctx;
+
+  const [startDate, setStartDate] = useState(() => {
+    const today = new Date();
+    const day = today.getDay();
+    const diff = day === 0 ? -6 : 1 - day; // Monday start
+    const monday = new Date(today);
+    monday.setDate(today.getDate() + diff);
+    return monday;
+  });
+
+  const [addModal, setAddModal] = useState<{ date: string; type: 'breakfast' | 'lunch' | 'dinner' | 'snacks' } | null>(null);
 
   useEffect(() => {
-    if (!mealPlan) {
-      const newPlan: MealPlan = {
-        id: '1',
-        name: 'Weekly Plan',
-        startDate: startDate.toISOString().split('T')[0],
-        meals: {}
-      };
-      daysOfWeek.forEach((day, i) => {
-        const date = new Date(startDate);
-        date.setDate(date.getDate() + i);
-        newPlan.meals[date.toISOString().split('T')[0]] = {};
-      });
-      setMealPlan(newPlan);
+    if (mealPlan) return;
+
+    const newPlan: MealPlan = {
+      id: `plan-${Date.now()}`,
+      name: 'Weekly Plan',
+      startDate: startDate.toISOString().split('T')[0],
+      meals: {}
+    };
+
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(startDate);
+      d.setDate(d.getDate() + i);
+      newPlan.meals[d.toISOString().split('T')[0]] = {};
     }
-  }, [startDate]);
 
-  const changeWeek = (direction: number) => {
-    const newDate = new Date(startDate);
-    newDate.setDate(newDate.getDate() + direction * 7);
-    setStartDate(newDate);
+    setMealPlan(newPlan);
+  }, [mealPlan, startDate, setMealPlan]);
+
+  const changeWeek = (delta: number) => {
+    const newStart = new Date(startDate);
+    newStart.setDate(startDate.getDate() + delta * 7);
+    setStartDate(newStart);
   };
 
-  const addMeal = (day: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks', recipe: Recipe) => {
-    if (mealPlan) {
-      const updated = { ...mealPlan };
-      if (mealType === 'snacks') {
-        if (!updated.meals[day].snacks) updated.meals[day].snacks = [];
-        updated.meals[day].snacks!.push(recipe);
-      } else {
-        updated.meals[day][mealType] = recipe;
-      }
-      setMealPlan(updated);
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(startDate);
+    d.setDate(startDate.getDate() + i);
+    const dateStr = d.toISOString().split('T')[0];
+    return {
+      date: dateStr,
+      display: d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+    };
+  });
+
+  const addMeal = (date: string, type: 'breakfast' | 'lunch' | 'dinner' | 'snacks', recipe: Recipe) => {
+    if (!mealPlan) return;
+    const updated = { ...mealPlan };
+    if (type === 'snacks') {
+      if (!updated.meals[date].snacks) updated.meals[date].snacks = [];
+      updated.meals[date].snacks.push(recipe);
+    } else {
+      updated.meals[date][type] = recipe;
     }
+    setMealPlan(updated);
   };
 
-  const removeMeal = (day: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks', index?: number) => {
-    if (mealPlan) {
-      const updated = { ...mealPlan };
-      if (mealType === 'snacks' && index !== undefined) {
-        updated.meals[day].snacks = updated.meals[day].snacks?.filter((_, i) => i !== index);
-      } else {
-        delete updated.meals[day][mealType];
-      }
-      setMealPlan(updated);
+  const removeMeal = (date: string, type: 'breakfast' | 'lunch' | 'dinner' | 'snacks', index?: number) => {
+    if (!mealPlan) return;
+    const updated = { ...mealPlan };
+    if (type === 'snacks' && index !== undefined) {
+      updated.meals[date].snacks = updated.meals[date].snacks?.filter((_, i) => i !== index) ?? [];
+    } else {
+      delete updated.meals[date][type];
     }
-  };
-
-  const getDays = () => {
-    return daysOfWeek.map((dayName, i) => {
-      const day = new Date(startDate);
-      day.setDate(day.getDate() + i);
-      return {
-        name: dayName,
-        date: day.toISOString().split('T')[0],
-        display: day.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
-      };
-    });
-  };
-
-  const openAddModal = (day: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks') => {
-    setSelectedDay(day);
-    setSelectedMealType(mealType);
-  };
-
-  const handleAdd = (recipe: Recipe) => {
-    if (selectedDay && selectedMealType) {
-      addMeal(selectedDay, selectedMealType, recipe);
-      setSelectedDay(null);
-      setSelectedMealType(null);
-    }
+    setMealPlan(updated);
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Meal Planner</h2>
-      
-      <div className="flex items-center justify-between mb-4">
-        <button onClick={() => changeWeek(-1)} className="p-2 rounded bg-gray-200 dark:bg-gray-700">
-          <ChevronLeft className="w-5 h-5" />
-        </button>
-        <span className="text-lg font-semibold text-gray-900 dark:text-white">
-          Week of {startDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-        </span>
-        <button onClick={() => changeWeek(1)} className="p-2 rounded bg-gray-200 dark:bg-gray-700">
-          <ChevronRight className="w-5 h-5" />
-        </button>
+    <main className="max-w-7xl mx-auto px-4 py-10">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+        <h2 className="text-3xl font-bold text-gray-900 dark:text-white">Meal Planner</h2>
+        <div className="flex items-center gap-4">
+          <button onClick={() => changeWeek(-1)} className="p-2 rounded bg-gray-200 dark:bg-gray-700">
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <span className="font-semibold text-lg text-gray-900 dark:text-white">
+            Week of {startDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
+          </span>
+          <button onClick={() => changeWeek(1)} className="p-2 rounded bg-gray-200 dark:bg-gray-700">
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
-      <div className="grid md:grid-cols-7 gap-4">
-        {getDays().map(day => (
-          <div key={day.date} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
-            <h3 className="font-semibold text-center mb-4 text-gray-900 dark:text-white">{day.display}</h3>
-            {['breakfast', 'lunch', 'dinner', 'snacks'].map(mealType => (
-              <div key={mealType} className="mb-3">
-                <div className="flex justify-between items-center mb-1">
-                  <span className="text-sm font-medium capitalize text-gray-700 dark:text-gray-300">{mealType}</span>
-                  <button 
-                    onClick={() => openAddModal(day.date, mealType as any)} 
-                    className="text-emerald-600 hover:text-emerald-800 text-sm"
-                  >
-                    <Plus className="w-4 h-4" />
-                  </button>
+      <div className="grid grid-cols-1 md:grid-cols-7 gap-4">
+        {weekDays.map(day => {
+          const dayMeals = mealPlan?.meals[day.date] || {};
+
+          return (
+            <div key={day.date} className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-4">
+              <h3 className="text-center font-semibold text-gray-900 dark:text-white mb-4 pb-2 border-b dark:border-gray-700">
+                {day.display}
+              </h3>
+
+              {(['breakfast', 'lunch', 'dinner', 'snacks'] as const).map(type => (
+                <div key={type} className="mb-4">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="capitalize font-medium text-gray-700 dark:text-gray-300 text-sm">{type}</span>
+                    <button onClick={() => setAddModal({ date: day.date, type })} className="text-emerald-600 hover:text-emerald-800">
+                      <Plus className="w-5 h-5" />
+                    </button>
+                  </div>
+
+                  {type !== 'snacks' ? (
+                    dayMeals[type] ? (
+                      <div className="bg-gray-100 dark:bg-gray-700 p-3 rounded text-sm flex justify-between items-center">
+                        <span className="font-medium text-gray-900 dark:text-white truncate">{dayMeals[type]!.name}</span>
+                        <button onClick={() => removeMeal(day.date, type)} className="text-red-500 hover:text-red-700">
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="text-xs text-gray-500 dark:text-gray-400 italic">No meal</div>
+                    )
+                  ) : (
+                    <div className="space-y-2">
+                      {dayMeals.snacks?.map((snack, idx) => (
+                        <div key={idx} className="bg-gray-100 dark:bg-gray-700 p-3 rounded text-sm flex justify-between items-center">
+                          <span className="font-medium text-gray-900 dark:text-white truncate">{snack.name}</span>
+                          <button onClick={() => removeMeal(day.date, 'snacks', idx)} className="text-red-500 hover:text-red-700">
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
+                      )) || <div className="text-xs text-gray-500 dark:text-gray-400 italic">No snacks</div>}
+                    </div>
+                  )}
                 </div>
-                {mealType !== 'snacks' ? (
-                  mealPlan?.meals[day.date]?.[mealType] && (
-                    <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm flex justify-between items-center">
-                      <span>{mealPlan.meals[day.date][mealType].name}</span>
-                      <button onClick={() => removeMeal(day.date, mealType)} className="text-red-500">
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  )
-                ) : (
-                  mealPlan?.meals[day.date]?.snacks?.map((snack, i) => (
-                    <div key={i} className="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm flex justify-between items-center mb-1">
-                      <span>{snack.name}</span>
-                      <button onClick={() => removeMeal(day.date, 'snacks', i)} className="text-red-500">
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))
-                )}
-              </div>
-            ))}
-          </div>
-        ))}
+              ))}
+            </div>
+          );
+        })}
       </div>
 
-      {/* Add Meal Modal */}
-      {selectedDay && selectedMealType && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 p-6">
-            <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Add {selectedMealType}</h3>
-            <select 
-              onChange={(e) => {
+      {addModal && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50 p-4">
+          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
+            <h3 className="text-xl font-bold mb-4 text-gray-900 dark:text-white">
+              Add {addModal.type}
+            </h3>
+            <select
+              onChange={e => {
                 const recipe = recipes.find(r => r.id === e.target.value);
-                if (recipe) handleAdd(recipe);
+                if (recipe) {
+                  addMeal(addModal.date, addModal.type, recipe);
+                  setAddModal(null);
+                }
               }}
-              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded"
+              className="w-full p-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+              autoFocus
             >
-              <option value="">Select Recipe</option>
-              {recipes.filter(r => r.category === selectedMealType || selectedMealType === 'snacks').map(r => (
-                <option key={r.id} value={r.id}>{r.name}</option>
+              <option value="">Select recipe...</option>
+              {recipes.map(r => (
+                <option key={r.id} value={r.id}>
+                  {r.name} ({r.category})
+                </option>
               ))}
             </select>
-            <button onClick={() => { setSelectedDay(null); setSelectedMealType(null); }} className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            <button
+              onClick={() => setAddModal(null)}
+              className="mt-4 text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200"
+            >
               Cancel
             </button>
           </div>
         </div>
       )}
-    </div>
+    </main>
   );
 };
 
-// NutritionPage Placeholder (Improved UI)
-const NutritionPage = () => (
-  <div className="max-w-7xl mx-auto px-4 py-8">
-    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Nutrition Dashboard</h2>
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
-      <TrendingUp className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">Track Your Nutrition</p>
-      <p className="text-gray-500 dark:text-gray-500">Monitor your daily intake and health goals</p>
-    </div>
-  </div>
-);
+// ────────────────────────────────────────────────
+// GROCERY PAGE
+// ────────────────────────────────────────────────
 
-// GroceryListPage (Generate from Meal Plan)
 const GroceryListPage = () => {
-  const { mealPlan } = useContext(AppContext);
-  const [groceryList, setGroceryList] = useState<GroceryItem[]>([]);
+  const ctx = useContext(AppContext)!;
+  const { mealPlan } = ctx;
+
+  const [list, setList] = useState<GroceryItem[]>([]);
 
   useEffect(() => {
-    if (mealPlan) {
-      const itemsMap = new Map<string, GroceryItem>();
-      Object.values(mealPlan.meals).forEach(dayMeals => {
-        ['breakfast', 'lunch', 'dinner'].forEach(mealType => {
-          const recipe = dayMeals[mealType];
-          if (recipe) {
-            recipe.ingredients.forEach(ing => {
-              const key = ing.name;
-              if (itemsMap.has(key)) {
-                const existing = itemsMap.get(key)!;
-                existing.amount += ing.amount;
-              } else {
-                itemsMap.set(key, { ...ing, checked: false });
-              }
-            });
-          }
-        });
-        dayMeals.snacks?.forEach(snack => {
-          snack.ingredients.forEach(ing => {
-            const key = ing.name;
-            if (itemsMap.has(key)) {
-              const existing = itemsMap.get(key)!;
-              existing.amount += ing.amount;
+    if (!mealPlan) {
+      setList([]);
+      return;
+    }
+
+    const map = new Map<string, GroceryItem>();
+
+    Object.values(mealPlan.meals).forEach(day => {
+      ['breakfast', 'lunch', 'dinner'].forEach(type => {
+        const r = day[type as keyof typeof day];
+        if (r) {
+          r.ingredients.forEach(ing => {
+            const key = `${ing.name}|${ing.unit}`;
+            if (map.has(key)) {
+              map.get(key)!.amount += ing.amount;
             } else {
-              itemsMap.set(key, { ...ing, checked: false });
+              map.set(key, { ...ing, checked: false });
             }
           });
+        }
+      });
+
+      day.snacks?.forEach(s => {
+        s.ingredients.forEach(ing => {
+          const key = `${ing.name}|${ing.unit}`;
+          if (map.has(key)) {
+            map.get(key)!.amount += ing.amount;
+          } else {
+            map.set(key, { ...ing, checked: false });
+          }
         });
       });
-      setGroceryList(Array.from(itemsMap.values()));
-    }
+    });
+
+    setList(Array.from(map.values()));
   }, [mealPlan]);
 
-  const toggleChecked = (index: number) => {
-    const updated = [...groceryList];
-    updated[index].checked = !updated[index].checked;
-    setGroceryList(updated);
+  const toggle = (index: number) => {
+    setList(prev => {
+      const next = [...prev];
+      next[index].checked = !next[index].checked;
+      return next;
+    });
   };
 
-  const groupedItems = groceryList.reduce((acc, item) => {
+  const grouped = list.reduce((acc, item) => {
     if (!acc[item.category]) acc[item.category] = [];
     acc[item.category].push(item);
     return acc;
   }, {} as Record<string, GroceryItem[]>);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Grocery List</h2>
-      {Object.entries(groupedItems).map(([category, items]) => (
-        <div key={category} className="mb-6">
-          <h3 className="font-semibold text-lg mb-3 text-gray-900 dark:text-white">{category}</h3>
-          <ul className="bg-white dark:bg-gray-800 rounded-lg shadow-md divide-y dark:divide-gray-700">
-            {items.map((item, i) => (
-              <li key={i} className="flex items-center justify-between p-4">
-                <div className="flex items-center">
-                  <input 
-                    type="checkbox" 
-                    checked={item.checked} 
-                    onChange={() => toggleChecked(groceryList.findIndex(g => g.ingredient === item.ingredient && g.category === category))} 
-                    className="mr-3"
+    <main className="max-w-7xl mx-auto px-4 py-10">
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-8">Grocery List</h2>
+
+      {list.length === 0 ? (
+        <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md p-12 text-center">
+          <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+          <p className="text-gray-600 dark:text-gray-400">No items yet — create a meal plan first</p>
+        </div>
+      ) : (
+        Object.entries(grouped).map(([cat, items]) => (
+          <div key={cat} className="mb-8">
+            <h3 className="font-semibold text-lg mb-3 text-gray-900 dark:text-white">{cat}</h3>
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-md divide-y dark:divide-gray-700">
+              {items.map((item, i) => (
+                <div key={i} className="flex items-center p-4">
+                  <input
+                    type="checkbox"
+                    checked={item.checked}
+                    onChange={() => toggle(list.indexOf(item))}
+                    className="w-5 h-5 text-emerald-600 rounded border-gray-300 dark:border-gray-600"
                   />
-                  <span className={`text-gray-900 dark:text-white ${item.checked ? 'line-through text-gray-500 dark:text-gray-400' : ''}`}>
-                    {item.amount} {item.unit} {item.ingredient}
+                  <span className={`ml-4 ${item.checked ? 'line-through text-gray-500 dark:text-gray-400' : 'text-gray-900 dark:text-white'}`}>
+                    {item.amount} {item.unit} {item.name}
                   </span>
                 </div>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-      {!groceryList.length && (
-        <p className="text-center text-gray-500 dark:text-gray-400">No items in grocery list. Create a meal plan first.</p>
+              ))}
+            </div>
+          </div>
+        ))
       )}
-    </div>
+    </main>
   );
 };
 
-// Main App
+// ────────────────────────────────────────────────
+// MAIN APP
+// ────────────────────────────────────────────────
+
 export default function NigerianMealPlanner() {
+  const ctx = useContext(AppContext);
+
   return (
     <AppProvider>
-      <div className={`min-h-screen bg-gray-50 dark:bg-gray-900`}>
+      <div className={`min-h-screen ${ctx?.theme === 'dark' ? 'bg-gray-950 text-gray-100' : 'bg-gray-50 text-gray-900'}`}>
         <Header />
-        <AppContent />
+        {ctx?.currentPage === 'home' && <HomePage />}
+        {ctx?.currentPage === 'recipes' && <RecipesPage />}
+        {ctx?.currentPage === 'planner' && <MealPlannerPage />}
+        {ctx?.currentPage === 'grocery' && <GroceryListPage />}
       </div>
     </AppProvider>
   );
 }
-
-function AppContent() {
-  const { currentPage } = useContext(AppContext);
-
-  return (
-    <>
-      {currentPage === 'home' && <HomePage />}
-      {currentPage === 'recipes' && <RecipesPage />}
-      {currentPage === 'planner' && <MealPlannerPage />}
-      {currentPage === 'nutrition' && <NutritionPage />}
-      {currentPage === 'grocery' && <GroceryListPage />}
-    </>
-  );
-}
-```
