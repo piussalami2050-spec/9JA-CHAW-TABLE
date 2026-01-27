@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { Calendar, ChefHat, ShoppingCart, TrendingUp, Search, Clock, Users, Utensils, Leaf, Home, Check, AlertTriangle } from 'lucide-react';
+import { Calendar, ChefHat, ShoppingCart, TrendingUp, Search, Clock, Users, Utensils, Leaf, Home, Check, AlertTriangle, X, Plus, ChevronLeft, ChevronRight, Save, Download, Share2, Edit, Trash2, BookOpen, Heart, Filter } from 'lucide-react';
 
 // Types
 interface Ingredient {
@@ -35,6 +35,7 @@ interface Recipe {
   tags: string[];
   isHealthy: boolean;
   healthNotes?: string;
+  isFavorite?: boolean;
 }
 
 interface MealPlan {
@@ -51,7 +52,16 @@ interface MealPlan {
   };
 }
 
-// Sample Recipes
+interface GroceryItem {
+  ingredient: string;
+  amount: number;
+  unit: string;
+  category: string;
+  checked: boolean;
+  estimatedCost?: number;
+}
+
+// Sample Recipes (10 recipes for now - you can add more)
 const SAMPLE_RECIPES: Recipe[] = [
   {
     id: '1',
@@ -188,6 +198,126 @@ const SAMPLE_RECIPES: Recipe[] = [
     tags: ['vegetarian', 'high-fiber'],
     isHealthy: true,
     healthNotes: 'Excellent fiber source'
+  },
+  {
+    id: '6',
+    name: 'Efo Riro',
+    category: 'lunch',
+    prepTime: 15,
+    cookTime: 30,
+    servings: 4,
+    imageUrl: 'https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=400',
+    ingredients: [
+      { name: 'Spinach', amount: 6, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Lean beef', amount: 300, unit: 'g', category: 'Proteins' },
+      { name: 'Palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' }
+    ],
+    instructions: [
+      'Cook lean beef until tender',
+      'Heat palm oil, fry onions',
+      'Add meat and cook',
+      'Add chopped spinach and stir'
+    ],
+    nutrition: { calories: 290, protein: 22, carbs: 14, fats: 16, fiber: 4, sodium: 340, sugar: 6 },
+    tags: ['high-protein', 'iron-rich'],
+    isHealthy: true,
+    healthNotes: 'Rich in iron and vitamins'
+  },
+  {
+    id: '7',
+    name: 'Yam Porridge',
+    category: 'lunch',
+    prepTime: 15,
+    cookTime: 30,
+    servings: 4,
+    imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400',
+    ingredients: [
+      { name: 'Yam', amount: 1, unit: 'medium tuber', category: 'Grains & Cereals' },
+      { name: 'Palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Smoked fish', amount: 150, unit: 'g', category: 'Proteins' }
+    ],
+    instructions: [
+      'Peel and cut yam',
+      'Boil yam until soft',
+      'Add palm oil and fish',
+      'Mash slightly'
+    ],
+    nutrition: { calories: 380, protein: 14, carbs: 58, fats: 10, fiber: 6, sodium: 380, sugar: 4 },
+    tags: ['comfort-food', 'filling'],
+    isHealthy: true,
+    healthNotes: 'Good energy source'
+  },
+  {
+    id: '8',
+    name: 'Akara',
+    category: 'breakfast',
+    prepTime: 20,
+    cookTime: 15,
+    servings: 6,
+    imageUrl: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=400',
+    ingredients: [
+      { name: 'Peeled beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
+      { name: 'Vegetable oil', amount: 2, unit: 'cups', category: 'Oils & Fats' }
+    ],
+    instructions: [
+      'Blend beans until smooth',
+      'Add onions and pepper',
+      'Whip mixture until fluffy',
+      'Fry in hot oil'
+    ],
+    nutrition: { calories: 180, protein: 10, carbs: 20, fats: 6, fiber: 6, sodium: 140, sugar: 1 },
+    tags: ['low-salt', 'protein-rich'],
+    isHealthy: true,
+    healthNotes: 'Good protein source'
+  },
+  {
+    id: '9',
+    name: 'Grilled Chicken Suya',
+    category: 'dinner',
+    prepTime: 30,
+    cookTime: 20,
+    servings: 4,
+    imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400',
+    ingredients: [
+      { name: 'Chicken breast', amount: 500, unit: 'g', category: 'Proteins' },
+      { name: 'Suya spice', amount: 3, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Vegetable oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' }
+    ],
+    instructions: [
+      'Cut chicken into strips',
+      'Marinate with suya spice',
+      'Thread onto skewers',
+      'Grill for 8-10 minutes each side'
+    ],
+    nutrition: { calories: 240, protein: 32, carbs: 6, fats: 10, fiber: 2, sodium: 320, sugar: 2 },
+    tags: ['high-protein', 'grilled'],
+    isHealthy: true,
+    healthNotes: 'Lean protein, grilled'
+  },
+  {
+    id: '10',
+    name: 'Fish Pepper Soup',
+    category: 'dinner',
+    prepTime: 10,
+    cookTime: 25,
+    servings: 4,
+    imageUrl: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=400',
+    ingredients: [
+      { name: 'Fresh catfish', amount: 4, unit: 'pieces', category: 'Proteins' },
+      { name: 'Pepper soup spice', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Scotch bonnet', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' }
+    ],
+    instructions: [
+      'Clean fish thoroughly',
+      'Boil water with spices',
+      'Add fish and cook for 15-20 minutes',
+      'Serve hot'
+    ],
+    nutrition: { calories: 180, protein: 28, carbs: 4, fats: 6, fiber: 1, sodium: 280, sugar: 2 },
+    tags: ['low-carb', 'high-protein'],
+    isHealthy: true,
+    healthNotes: 'Low calorie, high protein'
   }
 ];
 
@@ -224,8 +354,22 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, [recipes, mealPlan]);
 
+  const toggleFavorite = (recipeId: string) => {
+    setRecipes(recipes.map(r => 
+      r.id === recipeId ? { ...r, isFavorite: !r.isFavorite } : r
+    ));
+  };
+
   return (
-    <AppContext.Provider value={{ recipes, setRecipes, mealPlan, setMealPlan, currentPage, setCurrentPage }}>
+    <AppContext.Provider value={{ 
+      recipes, 
+      setRecipes, 
+      mealPlan, 
+      setMealPlan, 
+      currentPage, 
+      setCurrentPage,
+      toggleFavorite
+    }}>
       {children}
     </AppContext.Provider>
   );
@@ -236,10 +380,10 @@ const Header = () => {
   const { currentPage, setCurrentPage } = useContext(AppContext);
   
   return (
-    <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg">
+    <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 py-4">
         <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setCurrentPage('home')}>
             <ChefHat className="w-8 h-8" />
             <h1 className="text-2xl font-bold">Nigerian Meal Planner</h1>
           </div>
@@ -298,7 +442,7 @@ const HomePage = () => {
         
         <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-lime-500">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-800">Low Salt Options</h3>
+            <h3 className="text-lg font-semibold text-gray-800">Low Salt</h3>
             <Check className="w-6 h-6 text-lime-600" />
           </div>
           <p className="text-3xl font-bold text-lime-600">
@@ -307,14 +451,14 @@ const HomePage = () => {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-3 gap-6">
         <button
           onClick={() => setCurrentPage('recipes')}
           className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
         >
           <Utensils className="w-8 h-8 text-emerald-600 mb-2" />
           <h4 className="font-bold text-gray-900">Browse Recipes</h4>
-          <p className="text-sm text-gray-600">Explore Nigerian recipes</p>
+          <p className="text-sm text-gray-600">Explore {recipes.length} Nigerian recipes</p>
         </button>
         
         <button
@@ -332,7 +476,7 @@ const HomePage = () => {
         >
           <ShoppingCart className="w-8 h-8 text-lime-600 mb-2" />
           <h4 className="font-bold text-gray-900">Grocery List</h4>
-          <p className="text-sm text-gray-600">Generate list</p>
+          <p className="text-sm text-gray-600">Auto-generate list</p>
         </button>
       </div>
     </div>
@@ -341,7 +485,7 @@ const HomePage = () => {
 
 // RecipesPage Component
 const RecipesPage = () => {
-  const { recipes } = useContext(AppContext);
+  const { recipes, toggleFavorite } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
 
   const filteredRecipes = recipes.filter((recipe: Recipe) =>
@@ -359,7 +503,7 @@ const RecipesPage = () => {
           placeholder="Search recipes..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
         />
       </div>
 
@@ -368,8 +512,14 @@ const RecipesPage = () => {
           <div key={recipe.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
             <div className="h-48 bg-gray-200 relative">
               <img src={recipe.imageUrl} alt={recipe.name} className="w-full h-full object-cover" />
+              <button
+                onClick={() => toggleFavorite(recipe.id)}
+                className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md"
+              >
+                <Heart className={`w-5 h-5 ${recipe.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+              </button>
               {recipe.isHealthy && (
-                <div className="absolute top-2 right-2 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
+                <div className="absolute top-2 left-2 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
                   <Leaf className="w-3 h-3 mr-1" />
                   Healthy
                 </div>
@@ -379,7 +529,7 @@ const RecipesPage = () => {
             <div className="p-4">
               <h3 className="font-bold text-lg text-gray-900 mb-2">{recipe.name}</h3>
               
-              <div className="flex items-center text-sm text-gray-600 mb-2 space-x-4">
+              <div className="flex items-center text-sm text-gray-600 mb-3 space-x-4">
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 mr-1" />
                   {recipe.prepTime + recipe.cookTime}min
