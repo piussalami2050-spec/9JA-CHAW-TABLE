@@ -61,6 +61,7 @@ interface GroceryItem {
   estimatedCost?: number;
 }
 
+// Sample Recipes with CORRECT IMAGES and DETAILED INSTRUCTIONS
 const SAMPLE_RECIPES: Recipe[] = [
   {
     id: '1',
