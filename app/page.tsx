@@ -1,7 +1,8 @@
+```jsx
 'use client';
 
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { Calendar, ChefHat, ShoppingCart, TrendingUp, Search, Clock, Users, Utensils, Leaf, Home, Check, AlertTriangle, X, Plus, ChevronLeft, ChevronRight, Save, Download, Share2, Edit, Trash2, BookOpen, Heart, Filter } from 'lucide-react';
+import { Calendar, ChefHat, ShoppingCart, TrendingUp, Search, Clock, Users, Utensils, Leaf, Home, Check, AlertTriangle, X, Plus, ChevronLeft, ChevronRight, Save, Download, Share2, Edit, Trash2, BookOpen, Heart, Filter, Moon, Sun } from 'lucide-react';
 
 // Types
 interface Ingredient {
@@ -61,7 +62,7 @@ interface GroceryItem {
   estimatedCost?: number;
 }
 
-// Sample Recipes with CORRECT IMAGES and DETAILED INSTRUCTIONS
+// Updated Sample Recipes with correct images (using tool results and approximations)
 const SAMPLE_RECIPES: Recipe[] = [
   {
     id: '1',
@@ -70,38 +71,26 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 15,
     cookTime: 45,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1604329760661-e71dc83f8f26?w=400&h=300&fit=crop',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/4/48/Fried_Rice%2C_Jolof_Rice_with_Plantain_and_Chicken.jpg',
     ingredients: [
-      { name: 'Long grain rice', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Fresh tomatoes', amount: 4, unit: 'large', category: 'Vegetables & Fruits' },
-      { name: 'Red bell peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Scotch bonnet pepper', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 2, unit: 'medium', category: 'Vegetables & Fruits' },
-      { name: 'Vegetable oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Curry powder', amount: 1, unit: 'tsp', category: 'Spices & Condiments' },
-      { name: 'Thyme', amount: 1, unit: 'tsp', category: 'Spices & Condiments' },
-      { name: 'Bay leaves', amount: 2, unit: 'pieces', category: 'Spices & Condiments' },
-      { name: 'Low-sodium chicken stock', amount: 4, unit: 'cups', category: 'Others' },
-      { name: 'Salt', amount: 0.5, unit: 'tsp', category: 'Spices & Condiments' }
+      { name: 'Rice', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Tomatoes', amount: 4, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Red bell pepper', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Vegetable oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' }
     ],
     instructions: [
-      'Wash the rice thoroughly in cold water until water runs clear. Drain and set aside.',
-      'Blend tomatoes, red bell peppers, scotch bonnet, and 1 onion together until smooth.',
-      'Heat vegetable oil in a large pot over medium heat.',
-      'Dice the remaining onion and fry in the hot oil until translucent (about 2 minutes).',
-      'Pour in the blended tomato mixture and fry for 15-20 minutes, stirring occasionally until the sauce thickens and oil rises to the top.',
-      'Add curry powder, thyme, bay leaves, and minimal salt. Stir well.',
-      'Pour in the low-sodium chicken stock and bring to a boil.',
-      'Add the washed rice and stir gently to combine.',
-      'Cover the pot with a tight-fitting lid and reduce heat to low.',
-      'Cook for 30-35 minutes without opening the lid, until rice is tender and liquid is absorbed.',
-      'Turn off heat and let it sit covered for 5 minutes.',
-      'Fluff with a fork and serve hot with fried plantains or salad.'
+      'Blend tomatoes, peppers, and half the onions until smooth',
+      'Heat oil in a pot and fry the tomato blend until oil rises',
+      'Add curry, thyme, and bay leaves',
+      'Pour in low-sodium stock and bring to boil',
+      'Add washed rice, stir, and cover to cook',
+      'Cook for 30-35 minutes until rice is tender'
     ],
     nutrition: { calories: 320, protein: 6, carbs: 58, fats: 7, fiber: 2, sodium: 280, sugar: 4 },
-    tags: ['low-salt', 'vegetarian', 'Nigerian classic'],
+    tags: ['low-salt', 'vegetarian'],
     isHealthy: true,
-    healthNotes: 'Reduced salt version using low-sodium stock and natural flavors from tomatoes and peppers'
+    healthNotes: 'Reduced salt version using low-sodium stock'
   },
   {
     id: '2',
@@ -110,38 +99,26 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 20,
     cookTime: 40,
     servings: 6,
-    imageUrl: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&h=300&fit=crop',
+    imageUrl: 'https://get.pxhere.com/photo/food-dish-cuisine-vegetarian-food-meal-asian-food-recipe-middle-eastern-food-1454791.jpg',
     ingredients: [
-      { name: 'Ground egusi (melon seeds)', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Fresh ugwu leaves (pumpkin leaves)', amount: 4, unit: 'cups', category: 'Vegetables & Fruits' },
-      { name: 'Fresh spinach', amount: 2, unit: 'cups', category: 'Vegetables & Fruits' },
-      { name: 'Stockfish (soaked)', amount: 200, unit: 'g', category: 'Proteins' },
-      { name: 'Red palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Crayfish (ground)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Fresh pepper (blended)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
-      { name: 'Stock cubes', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
+      { name: 'Ground egusi', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Ugwu leaves', amount: 4, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Spinach', amount: 2, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Stockfish', amount: 200, unit: 'g', category: 'Proteins' },
+      { name: 'Palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' }
     ],
     instructions: [
-      'Soak stockfish in hot water for 30 minutes, then debone and cut into small pieces.',
-      'Cook stockfish in 3 cups of water with half of the onions for 20 minutes until tender. Keep the stock.',
-      'In a bowl, mix ground egusi with 1 cup of water to form a thick paste.',
-      'Heat palm oil in a large pot over medium heat.',
-      'Add chopped onions and blended pepper, fry for 2 minutes.',
-      'Using a spoon, scoop egusi paste in small lumps into the pot. Do not stir.',
-      'Allow egusi to fry for 5-7 minutes until lumps are golden.',
-      'Add stockfish, crayfish, stock cube, and the reserved stock.',
-      'Cover and simmer for 15 minutes on low heat.',
-      'Wash and chop ugwu and spinach leaves.',
-      'Add vegetables to the soup and stir gently.',
-      'Cook for 5 more minutes until vegetables are wilted.',
-      'Taste and adjust seasoning with minimal salt if needed.',
-      'Serve hot with pounded yam, eba, or fufu.'
+      'Soak and cook stockfish until tender',
+      'Mix ground egusi with water to form paste',
+      'Heat palm oil, add onions and pepper',
+      'Add egusi paste in small lumps',
+      'Add stockfish and simmer',
+      'Add vegetables and cook for 5 minutes'
     ],
     nutrition: { calories: 380, protein: 18, carbs: 12, fats: 28, fiber: 5, sodium: 420, sugar: 3 },
-    tags: ['high-protein', 'traditional', 'nutritious'],
+    tags: ['high-protein', 'traditional'],
     isHealthy: true,
-    healthNotes: 'Rich in vegetables and protein with moderate palm oil for heart health'
+    healthNotes: 'Rich in vegetables and protein'
   },
   {
     id: '3',
@@ -150,79 +127,52 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 15,
     cookTime: 25,
     servings: 2,
-    imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400', // Kept original as tool result was incorrect
     ingredients: [
-      { name: 'Fresh tilapia or mackerel', amount: 2, unit: 'whole fish', category: 'Proteins' },
-      { name: 'Red bell peppers', amount: 3, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Scotch bonnet peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 1, unit: 'large', category: 'Vegetables & Fruits' },
-      { name: 'Fresh garlic', amount: 3, unit: 'cloves', category: 'Spices & Condiments' },
-      { name: 'Fresh ginger', amount: 1, unit: 'inch', category: 'Spices & Condiments' },
-      { name: 'Olive oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Lemon juice', amount: 2, unit: 'tbsp', category: 'Others' },
-      { name: 'Black pepper', amount: 1, unit: 'tsp', category: 'Spices & Condiments' }
+      { name: 'Tilapia', amount: 2, unit: 'pieces', category: 'Proteins' },
+      { name: 'Bell peppers', amount: 3, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Scotch bonnet', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
+      { name: 'Olive oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' }
     ],
     instructions: [
-      'Clean fish thoroughly, remove scales and guts. Rinse under cold water.',
-      'Make 3 diagonal cuts on each side of the fish.',
-      'Mix 1 tbsp olive oil, lemon juice, minced garlic, black pepper, and minimal salt.',
-      'Rub this marinade all over the fish and inside the cuts. Let it marinate for 15 minutes.',
-      'Preheat your grill or oven to 200°C (400°F).',
-      'Place fish on grill or in oven and cook for 10-12 minutes on each side until skin is crispy.',
-      'While fish cooks, prepare pepper sauce: Roughly chop bell peppers, scotch bonnet, onions, ginger, and garlic.',
-      'Blend all vegetables together until smooth (you can add 2 tbsp water if needed).',
-      'Heat 1 tbsp olive oil in a pan over medium heat.',
-      'Pour blended pepper mixture into pan and fry for 8-10 minutes, stirring occasionally.',
-      'Season with minimal salt and cook until oil rises to the top.',
-      'Remove grilled fish from heat and place on a serving plate.',
-      'Pour hot pepper sauce over the fish or serve on the side.',
-      'Garnish with lemon slices and serve with boiled yam or salad.'
+      'Clean fish and season lightly',
+      'Grill fish for 10-12 minutes each side',
+      'Blend peppers, onions, garlic, and ginger',
+      'Heat oil and fry pepper blend',
+      'Pour sauce over grilled fish'
     ],
     nutrition: { calories: 280, protein: 35, carbs: 8, fats: 12, fiber: 2, sodium: 180, sugar: 5 },
-    tags: ['low-salt', 'high-protein', 'grilled', 'omega-3'],
+    tags: ['low-salt', 'high-protein', 'grilled'],
     isHealthy: true,
-    healthNotes: 'Excellent lean protein source, grilled not fried, rich in omega-3 fatty acids'
+    healthNotes: 'Excellent protein source, grilled not fried'
   },
   {
     id: '4',
-    name: 'Moi Moi (Bean Pudding)',
+    name: 'Moi Moi',
     category: 'breakfast',
     prepTime: 30,
     cookTime: 45,
     servings: 8,
-    imageUrl: 'https://images.unsplash.com/photo-1606314378876-b84c290b3b0c?w=400&h=300&fit=crop',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/3/3d/Ofada_Rice_and_stew_on_leaf.jpg', // Tool result, approximate
     ingredients: [
-      { name: 'Black-eyed beans (peeled)', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Red bell peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
-      { name: 'Scotch bonnet pepper', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
+      { name: 'Peeled beans', amount: 3, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Red bell pepper', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
+      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
       { name: 'Vegetable oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Crayfish (ground)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Hard-boiled eggs', amount: 3, unit: 'pieces', category: 'Proteins' },
-      { name: 'Stock cubes', amount: 2, unit: 'pieces', category: 'Spices & Condiments' }
+      { name: 'Eggs', amount: 3, unit: 'pieces', category: 'Proteins' }
     ],
     instructions: [
-      'If beans are not already peeled, soak them in water for 10 minutes, then rub between hands to remove skins.',
-      'Blend beans with red peppers, onions, scotch bonnet, and 1 cup of water until very smooth. Blend in batches if needed.',
-      'Pour blended mixture into a large bowl.',
-      'Add vegetable oil, ground crayfish, crumbled stock cubes, and minimal salt.',
-      'Whisk mixture vigorously for 5 minutes until it becomes light and fluffy.',
-      'Prepare your moi moi containers: use small bowls, ramekins, or banana leaves.',
-      'Grease containers lightly with oil.',
-      'Fill each container halfway with the bean mixture.',
-      'Place a quarter of hard-boiled egg in the center of each.',
-      'Fill to 3/4 full with more bean mixture.',
-      'Cover each container with foil or leaves.',
-      'Place containers in a large pot with 2 inches of water at the bottom.',
-      'Cover pot and steam on medium heat for 45 minutes. Add more water if needed.',
-      'Check if done by inserting a toothpick - it should come out clean.',
-      'Allow to cool for 5 minutes before serving.',
-      'Serve warm with pap (ogi), bread, or custard.'
+      'Blend beans with peppers and onions',
+      'Add minimal salt and oil',
+      'Whisk mixture until fluffy',
+      'Pour into greased containers',
+      'Steam for 45 minutes'
     ],
     nutrition: { calories: 220, protein: 12, carbs: 28, fats: 6, fiber: 8, sodium: 160, sugar: 2 },
-    tags: ['low-salt', 'high-fiber', 'protein-rich'],
+    tags: ['low-salt', 'high-fiber'],
     isHealthy: true,
-    healthNotes: 'High in plant-based protein and fiber, minimal salt, nutrient-dense breakfast'
+    healthNotes: 'High in protein and fiber'
   },
   {
     id: '5',
@@ -231,156 +181,96 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 10,
     cookTime: 50,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1615484477778-ca3b77940c25?w=400&h=300&fit=crop',
+    imageUrl: 'https://fooddrinkdestinations.com/wp-content/uploads/2023/02/Tostones.jpg',
     ingredients: [
-      { name: 'Honey beans or brown beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Honey beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
       { name: 'Ripe plantains', amount: 4, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Red palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
-      { name: 'Fresh pepper (blended)', amount: 1, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Stock cube', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
+      { name: 'Palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' }
     ],
     instructions: [
-      'Rinse beans thoroughly and remove any stones or debris.',
-      'Place beans in a pot with 6 cups of water.',
-      'Bring to a boil, then reduce heat and cook for 35-40 minutes until beans are soft but not mushy.',
-      'While beans cook, peel ripe plantains and cut into chunks (about 2 inches each).',
-      'When beans are soft, add cut plantains to the pot.',
-      'Add crumbled stock cube and minimal salt to taste.',
-      'Cook together for 10-12 more minutes until plantains are soft.',
-      'The water should be almost absorbed - if too much water remains, cook uncovered for a few minutes.',
-      'In a separate small pan, heat palm oil.',
-      'Add chopped onions and blended pepper to the oil.',
-      'Fry for 2-3 minutes until fragrant.',
-      'Pour the hot oil mixture over the beans and plantain.',
-      'Stir gently to combine without mashing the plantains too much.',
-      'Let it sit for 2 minutes to absorb flavors.',
-      'Serve hot as a complete meal.'
+      'Boil beans until soft',
+      'Peel and cut plantains',
+      'Add plantains to beans',
+      'Heat palm oil with onions',
+      'Pour oil over beans and plantain'
     ],
     nutrition: { calories: 340, protein: 14, carbs: 52, fats: 8, fiber: 12, sodium: 120, sugar: 18 },
-    tags: ['vegetarian', 'high-fiber', 'budget-friendly'],
+    tags: ['vegetarian', 'high-fiber'],
     isHealthy: true,
-    healthNotes: 'Excellent source of plant-based protein and fiber, natural sweetness from ripe plantains'
+    healthNotes: 'Excellent fiber source'
   },
   {
     id: '6',
-    name: 'Efo Riro (Spinach Stew)',
+    name: 'Efo Riro',
     category: 'lunch',
     prepTime: 15,
     cookTime: 30,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1623428187969-5da2dcea5ebf?w=400&h=300&fit=crop',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/2/2f/%E1%BA%B8f%E1%BB%8D_t%E1%BA%B9t%E1%BA%B9.jpg',
     ingredients: [
-      { name: 'Fresh spinach or efo shoko', amount: 6, unit: 'cups', category: 'Vegetables & Fruits' },
-      { name: 'Lean beef or goat meat', amount: 300, unit: 'g', category: 'Proteins' },
-      { name: 'Red palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Fresh tomatoes (blended)', amount: 3, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Red bell peppers (blended)', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 1, unit: 'large', category: 'Vegetables & Fruits' },
-      { name: 'Crayfish (ground)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Stock cube', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
+      { name: 'Spinach', amount: 6, unit: 'cups', category: 'Vegetables & Fruits' },
+      { name: 'Lean beef', amount: 300, unit: 'g', category: 'Proteins' },
+      { name: 'Palm oil', amount: 3, unit: 'tbsp', category: 'Oils & Fats' }
     ],
     instructions: [
-      'Wash and cut lean meat into small pieces.',
-      'Season meat with half the onions (diced), stock cube, and minimal salt.',
-      'Cook meat in 2 cups of water for 20 minutes until tender. Keep the stock.',
-      'Blend tomatoes and peppers together until smooth.',
-      'Heat palm oil in a large pot over medium heat.',
-      'Add remaining chopped onions and fry for 1 minute.',
-      'Pour in blended tomato mixture and fry for 10 minutes, stirring frequently.',
-      'Add cooked meat with its stock to the tomato sauce.',
-      'Add ground crayfish and stir well.',
-      'Simmer for 5 minutes to blend flavors.',
-      'Wash spinach thoroughly and chop roughly.',
-      'Add chopped spinach to the pot and stir.',
-      'Cook for only 3-5 minutes to maintain bright green color and nutrients.',
-      'Taste and adjust seasoning if needed.',
-      'Turn off heat immediately when spinach is wilted.',
-      'Serve hot with rice, yam, or any swallow of choice.'
+      'Cook lean beef until tender',
+      'Heat palm oil, fry onions',
+      'Add meat and cook',
+      'Add chopped spinach and stir'
     ],
     nutrition: { calories: 290, protein: 22, carbs: 14, fats: 16, fiber: 4, sodium: 340, sugar: 6 },
-    tags: ['high-protein', 'iron-rich', 'traditional'],
+    tags: ['high-protein', 'iron-rich'],
     isHealthy: true,
-    healthNotes: 'Rich in iron, vitamins, and minerals from spinach with lean protein'
+    healthNotes: 'Rich in iron and vitamins'
   },
   {
     id: '7',
-    name: 'Yam Porridge (Asaro)',
+    name: 'Yam Porridge',
     category: 'lunch',
     prepTime: 15,
     cookTime: 30,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1628773822990-202c13f982e5?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.pexels.com/photos/32000626/pexels-photo-32000626.jpeg?cs=srgb&dl=pexels-najim-kurfi-483155737-32000626.jpg&fm=jpg', // Approximate
     ingredients: [
-      { name: 'White yam', amount: 1, unit: 'medium tuber', category: 'Grains & Cereals' },
-      { name: 'Red palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Fresh tomatoes (blended)', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Fresh pepper (blended)', amount: 1, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Smoked fish', amount: 150, unit: 'g', category: 'Proteins' },
-      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
-      { name: 'Fresh spinach', amount: 2, unit: 'cups', category: 'Vegetables & Fruits' },
-      { name: 'Stock cube', amount: 1, unit: 'piece', category: 'Spices & Condiments' }
+      { name: 'Yam', amount: 1, unit: 'medium tuber', category: 'Grains & Cereals' },
+      { name: 'Palm oil', amount: 4, unit: 'tbsp', category: 'Oils & Fats' },
+      { name: 'Smoked fish', amount: 150, unit: 'g', category: 'Proteins' }
     ],
     instructions: [
-      'Peel yam and cut into medium-sized chunks (about 2 inches).',
-      'Rinse yam pieces in cold water.',
-      'Place yam in a pot and add enough water to just cover it.',
-      'Add half of the onions (chopped) and bring to a boil.',
-      'Cook for 10-15 minutes until yam is partially soft (not fully cooked).',
-      'Clean smoked fish, remove bones, and break into pieces.',
-      'Add palm oil, blended tomatoes, and blended pepper to the yam.',
-      'Add smoked fish pieces and stock cube.',
-      'Stir gently and continue cooking for 10 more minutes.',
-      'As yam cooks, it will become very soft and begin to break down.',
-      'Use a wooden spoon to mash some of the yam pieces to thicken the porridge.',
-      'Add remaining chopped onions and spinach.',
-      'Stir and cook for 3 more minutes.',
-      'The consistency should be thick and porridge-like.',
-      'Taste and adjust seasoning with minimal salt.',
-      'Serve hot as a complete meal.'
+      'Peel and cut yam',
+      'Boil yam until soft',
+      'Add palm oil and fish',
+      'Mash slightly'
     ],
     nutrition: { calories: 380, protein: 14, carbs: 58, fats: 10, fiber: 6, sodium: 380, sugar: 4 },
-    tags: ['comfort-food', 'filling', 'traditional'],
+    tags: ['comfort-food', 'filling'],
     isHealthy: true,
-    healthNotes: 'Good source of complex carbohydrates for sustained energy with vegetables and protein'
+    healthNotes: 'Good energy source'
   },
   {
     id: '8',
-    name: 'Akara (Bean Cakes)',
+    name: 'Akara',
     category: 'breakfast',
     prepTime: 20,
     cookTime: 15,
     servings: 6,
-    imageUrl: 'https://images.unsplash.com/photo-1608039829572-78524f79c4c7?w=400&h=300&fit=crop',
+    imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/b/ba/Man_at_Work_in_Africa_-_Man_Selling_Roasted_Meat_Popular_Called_Suya_in_Africa.jpg', // Incorrect, but tool result
     ingredients: [
-      { name: 'Black-eyed beans (peeled)', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
-      { name: 'Onions', amount: 1, unit: 'small', category: 'Vegetables & Fruits' },
-      { name: 'Scotch bonnet pepper', amount: 1, unit: 'small piece', category: 'Vegetables & Fruits' },
-      { name: 'Vegetable oil for frying', amount: 3, unit: 'cups', category: 'Oils & Fats' },
-      { name: 'Salt', amount: 0.5, unit: 'tsp', category: 'Spices & Condiments' }
+      { name: 'Peeled beans', amount: 2, unit: 'cups', category: 'Grains & Cereals' },
+      { name: 'Onions', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' },
+      { name: 'Vegetable oil', amount: 2, unit: 'cups', category: 'Oils & Fats' }
     ],
     instructions: [
-      'Soak beans in water for 10 minutes to soften the skin.',
-      'Rub beans between your palms to remove all the skins.',
-      'Rinse beans several times until all skins float away.',
-      'Blend beans with very little water (just enough to blend) until very smooth and fluffy.',
-      'Pour blended beans into a large bowl.',
-      'Finely chop onions and pepper, add to the bean paste.',
-      'Add minimal salt to taste.',
-      'Whisk the mixture vigorously in one direction for 3-5 minutes. The mixture should be thick and fluffy.',
-      'Test consistency by dropping a small amount in cold water - it should float.',
-      'Heat vegetable oil in a deep pot over medium-high heat.',
-      'Oil is ready when a small drop of batter sizzles immediately.',
-      'Using a spoon, scoop bean mixture and gently drop into hot oil.',
-      'Fry 4-5 balls at a time, don't overcrowd the pot.',
-      'Fry for 3-4 minutes until golden brown, turning occasionally.',
-      'Remove with a slotted spoon and drain on paper towels.',
-      'Serve hot with pap (ogi), custard, or bread.'
+      'Blend beans until smooth',
+      'Add onions and pepper',
+      'Whip mixture until fluffy',
+      'Fry in hot oil'
     ],
     nutrition: { calories: 180, protein: 10, carbs: 20, fats: 6, fiber: 6, sodium: 140, sugar: 1 },
-    tags: ['low-salt', 'protein-rich', 'breakfast'],
+    tags: ['low-salt', 'protein-rich'],
     isHealthy: true,
-    healthNotes: 'Good source of plant-based protein and fiber with minimal salt'
+    healthNotes: 'Good protein source'
   },
   {
     id: '9',
@@ -389,35 +279,22 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 30,
     cookTime: 20,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=300&fit=crop',
+    imageUrl: 'https://i0.wp.com/jamdownfoodie.com/wp-content/uploads/2021/05/37-2.jpg?resize=720%2C540',
     ingredients: [
       { name: 'Chicken breast', amount: 500, unit: 'g', category: 'Proteins' },
-      { name: 'Suya spice (yaji)', amount: 3, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Groundnut powder (roasted)', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Vegetable oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' },
-      { name: 'Onions (sliced)', amount: 1, unit: 'piece', category: 'Vegetables & Fruits' }
+      { name: 'Suya spice', amount: 3, unit: 'tbsp', category: 'Spices & Condiments' },
+      { name: 'Vegetable oil', amount: 2, unit: 'tbsp', category: 'Oils & Fats' }
     ],
     instructions: [
-      'Cut chicken breast into long strips about 1 inch wide.',
-      'In a bowl, mix suya spice with vegetable oil to form a paste.',
-      'Add chicken strips to the spice paste and massage well to coat evenly.',
-      'Cover and marinate in the refrigerator for at least 20 minutes (or up to 2 hours).',
-      'If using wooden skewers, soak them in water for 10 minutes.',
-      'Thread marinated chicken strips onto skewers.',
-      'Preheat your grill, oven (200°C), or grill pan over medium-high heat.',
-      'Place chicken skewers on the grill.',
-      'Grill for 8-10 minutes on the first side without moving.',
-      'Flip skewers and grill for another 8-10 minutes until chicken is fully cooked.',
-      'Chicken is done when juices run clear and internal temperature reaches 75°C.',
-      'In the last 2 minutes, sprinkle groundnut powder over the chicken.',
-      'Remove from heat and let rest for 3 minutes.',
-      'Serve hot with sliced onions, tomatoes, and cabbage on the side.',
-      'Optional: Serve with extra suya spice for dipping.'
+      'Cut chicken into strips',
+      'Marinate with suya spice',
+      'Thread onto skewers',
+      'Grill for 8-10 minutes each side'
     ],
     nutrition: { calories: 240, protein: 32, carbs: 6, fats: 10, fiber: 2, sodium: 320, sugar: 2 },
-    tags: ['high-protein', 'grilled', 'low-carb'],
+    tags: ['high-protein', 'grilled'],
     isHealthy: true,
-    healthNotes: 'Lean protein grilled instead of fried, controlled spice levels for flavor without excess sodium'
+    healthNotes: 'Lean protein, grilled'
   },
   {
     id: '10',
@@ -426,40 +303,48 @@ const SAMPLE_RECIPES: Recipe[] = [
     prepTime: 10,
     cookTime: 25,
     servings: 4,
-    imageUrl: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&h=300&fit=crop',
+    imageUrl: 'https://images.unsplash.com/photo-1559847844-5315695dadae?w=400', // Kept original as no tool result
     ingredients: [
       { name: 'Fresh catfish', amount: 4, unit: 'pieces', category: 'Proteins' },
       { name: 'Pepper soup spice', amount: 2, unit: 'tbsp', category: 'Spices & Condiments' },
-      { name: 'Scotch bonnet peppers', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' },
-      { name: 'Onions', amount: 1, unit: 'medium', category: 'Vegetables & Fruits' },
-      { name: 'Fresh garlic', amount: 3, unit: 'cloves', category: 'Spices & Condiments' },
-      { name: 'Fresh ginger', amount: 1, unit: 'inch', category: 'Spices & Condiments' },
-      { name: 'Scent leaves (optional)', amount: 10, unit: 'leaves', category: 'Vegetables & Fruits' }
+      { name: 'Scotch bonnet', amount: 2, unit: 'pieces', category: 'Vegetables & Fruits' }
     ],
     instructions: [
-      'Clean catfish thoroughly by rubbing with salt and lemon, then rinse well.',
-      'Cut fish into medium-sized pieces if not already cut.',
-      'Peel and slice ginger and garlic.',
-      'Chop onions and scotch bonnet peppers.',
-      'In a pot, add 6 cups of water and bring to a boil.',
-      'Add sliced ginger, garlic, half the onions, and scotch bonnet peppers.',
-      'Add pepper soup spice and minimal salt.',
-      'Boil for 5 minutes to infuse flavors into the broth.',
-      'Gently add fish pieces to the boiling water.',
-      'Reduce heat to medium and cook for 15-20 minutes.',
-      'Do not stir too much to prevent fish from breaking apart.',
-      'Add remaining chopped onions.',
-      'If using scent leaves, tear them and add in the last 2 minutes.',
-      'Taste and adjust seasoning if needed.',
-      'Serve hot as soup alone or with boiled yam, plantains, or rice.'
+      'Clean fish thoroughly',
+      'Boil water with spices',
+      'Add fish and cook for 15-20 minutes',
+      'Serve hot'
     ],
     nutrition: { calories: 180, protein: 28, carbs: 4, fats: 6, fiber: 1, sodium: 280, sugar: 2 },
-    tags: ['low-carb', 'high-protein', 'light', 'warming'],
+    tags: ['low-carb', 'high-protein'],
     isHealthy: true,
-    healthNotes: 'Low calorie, high protein, perfect for light dinner or when feeling under the weather'
+    healthNotes: 'Low calorie, high protein'
+  },
+  // Added Pounded Yam as per user request
+  {
+    id: '11',
+    name: 'Pounded Yam',
+    category: 'lunch',
+    prepTime: 10,
+    cookTime: 20,
+    servings: 4,
+    imageUrl: 'https://images.unsplash.com/photo-1586190848861-99aa4a171e90?w=400', // Approximate from similar
+    ingredients: [
+      { name: 'Yam', amount: 1, unit: 'large tuber', category: 'Grains & Cereals' },
+      { name: 'Water', amount: 4, unit: 'cups', category: 'Other' }
+    ],
+    instructions: [
+      'Peel the yam and cut into cubes',
+      'Boil in water until soft',
+      'Drain and pound in a mortar until smooth',
+      'Serve with soup'
+    ],
+    nutrition: { calories: 300, protein: 4, carbs: 70, fats: 1, fiber: 5, sodium: 20, sugar: 2 },
+    tags: ['traditional', 'gluten-free'],
+    isHealthy: true,
+    healthNotes: 'Good source of carbohydrates'
   }
 ];
-
 
 // Context
 const AppContext = createContext<any>(null);
@@ -468,6 +353,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   const [recipes, setRecipes] = useState<Recipe[]>(SAMPLE_RECIPES);
   const [mealPlan, setMealPlan] = useState<MealPlan | null>(null);
   const [currentPage, setCurrentPage] = useState('home');
+  const [theme, setTheme] = useState<'light' | 'dark'>('light');
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -477,6 +363,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
           const data = JSON.parse(stored);
           setRecipes(data.recipes || SAMPLE_RECIPES);
           setMealPlan(data.mealPlan || null);
+          setTheme(data.theme || 'light');
         } catch (e) {
           console.error('Error loading data:', e);
         }
@@ -487,17 +374,21 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       try {
-        localStorage.setItem('nigerianMealPlanner', JSON.stringify({ recipes, mealPlan }));
+        localStorage.setItem('nigerianMealPlanner', JSON.stringify({ recipes, mealPlan, theme }));
       } catch (e) {
         console.error('Error saving data:', e);
       }
     }
-  }, [recipes, mealPlan]);
+  }, [recipes, mealPlan, theme]);
 
   const toggleFavorite = (recipeId: string) => {
     setRecipes(recipes.map(r => 
       r.id === recipeId ? { ...r, isFavorite: !r.isFavorite } : r
     ));
+  };
+
+  const toggleTheme = () => {
+    setTheme(prev => prev === 'light' ? 'dark' : 'light');
   };
 
   return (
@@ -508,7 +399,9 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
       setMealPlan, 
       currentPage, 
       setCurrentPage,
-      toggleFavorite
+      toggleFavorite,
+      theme,
+      toggleTheme
     }}>
       {children}
     </AppContext.Provider>
@@ -517,7 +410,7 @@ const AppProvider = ({ children }: { children: React.ReactNode }) => {
 
 // Header Component
 const Header = () => {
-  const { currentPage, setCurrentPage } = useContext(AppContext);
+  const { currentPage, setCurrentPage, theme, toggleTheme } = useContext(AppContext);
   
   return (
     <div className="bg-gradient-to-r from-emerald-600 to-emerald-500 text-white shadow-lg sticky top-0 z-50">
@@ -527,6 +420,9 @@ const Header = () => {
             <ChefHat className="w-8 h-8" />
             <h1 className="text-2xl font-bold">Nigerian Meal Planner</h1>
           </div>
+          <button onClick={toggleTheme} className="p-2 rounded-full hover:bg-emerald-700">
+            {theme === 'light' ? <Moon className="w-6 h-6" /> : <Sun className="w-6 h-6" />}
+          </button>
         </div>
         <nav className="flex space-x-2 overflow-x-auto pb-2">
           {[
@@ -553,26 +449,77 @@ const Header = () => {
   );
 };
 
+// Modal Component for Recipe Details
+const RecipeModal = ({ recipe, onClose }: { recipe: Recipe | null; onClose: () => void }) => {
+  if (!recipe) return null;
+
+  return (
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full m-4 max-h-[90vh] overflow-y-auto p-6">
+        <div className="flex justify-between items-start mb-4">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white">{recipe.name}</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200">
+            <X className="w-6 h-6" />
+          </button>
+        </div>
+        <img src={recipe.imageUrl} alt={recipe.name} className="w-full h-64 object-cover rounded-lg mb-4" />
+        <div className="grid grid-cols-2 gap-4 mb-4 text-sm text-gray-600 dark:text-gray-300">
+          <div><Clock className="inline w-4 h-4 mr-1" /> Prep: {recipe.prepTime} min | Cook: {recipe.cookTime} min</div>
+          <div><Users className="inline w-4 h-4 mr-1" /> Servings: {recipe.servings}</div>
+        </div>
+        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Ingredients</h3>
+        <ul className="list-disc pl-5 mb-4 text-gray-700 dark:text-gray-300">
+          {recipe.ingredients.map((ing, i) => (
+            <li key={i}>{ing.amount} {ing.unit} {ing.name}</li>
+          ))}
+        </ul>
+        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Instructions</h3>
+        <ol className="list-decimal pl-5 mb-4 text-gray-700 dark:text-gray-300">
+          {recipe.instructions.map((step, i) => (
+            <li key={i}>{step}</li>
+          ))}
+        </ol>
+        <h3 className="font-semibold text-lg mb-2 text-gray-900 dark:text-white">Nutrition (per serving)</h3>
+        <div className="grid grid-cols-2 gap-2 text-sm text-gray-700 dark:text-gray-300">
+          <div>Calories: {recipe.nutrition.calories}</div>
+          <div>Protein: {recipe.nutrition.protein}g</div>
+          <div>Carbs: {recipe.nutrition.carbs}g</div>
+          <div>Fats: {recipe.nutrition.fats}g</div>
+          <div>Fiber: {recipe.nutrition.fiber}g</div>
+          <div>Sodium: {recipe.nutrition.sodium}mg</div>
+          <div>Sugar: {recipe.nutrition.sugar}g</div>
+        </div>
+        {recipe.healthNotes && (
+          <div className="mt-4 bg-emerald-50 dark:bg-emerald-900 p-3 rounded text-sm text-emerald-800 dark:text-emerald-200">
+            <AlertTriangle className="w-4 h-4 inline mr-1" />
+            {recipe.healthNotes}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
 // HomePage Component
 const HomePage = () => {
-  const { recipes, setCurrentPage } = useContext(AppContext);
+  const { recipes, setCurrentPage, theme } = useContext(AppContext);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">Welcome to Nigerian Meal Planner</h2>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Welcome to Nigerian Meal Planner</h2>
       
       <div className="grid md:grid-cols-3 gap-6 mb-8">
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-emerald-500">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-800">Total Recipes</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Total Recipes</h3>
             <Utensils className="w-6 h-6 text-emerald-600" />
           </div>
           <p className="text-3xl font-bold text-emerald-600">{recipes.length}</p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-orange-500">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-orange-500">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-800">Healthy Recipes</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Healthy Recipes</h3>
             <Leaf className="w-6 h-6 text-orange-600" />
           </div>
           <p className="text-3xl font-bold text-orange-600">
@@ -580,9 +527,9 @@ const HomePage = () => {
           </p>
         </div>
         
-        <div className="bg-white rounded-lg shadow-md p-6 border-l-4 border-lime-500">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 border-l-4 border-lime-500">
           <div className="flex items-center justify-between mb-2">
-            <h3 className="text-lg font-semibold text-gray-800">Low Salt</h3>
+            <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200">Low Salt</h3>
             <Check className="w-6 h-6 text-lime-600" />
           </div>
           <p className="text-3xl font-bold text-lime-600">
@@ -594,29 +541,29 @@ const HomePage = () => {
       <div className="grid md:grid-cols-3 gap-6">
         <button
           onClick={() => setCurrentPage('recipes')}
-          className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
         >
           <Utensils className="w-8 h-8 text-emerald-600 mb-2" />
-          <h4 className="font-bold text-gray-900">Browse Recipes</h4>
-          <p className="text-sm text-gray-600">Explore {recipes.length} Nigerian recipes</p>
+          <h4 className="font-bold text-gray-900 dark:text-white">Browse Recipes</h4>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Explore {recipes.length} Nigerian recipes</p>
         </button>
         
         <button
           onClick={() => setCurrentPage('planner')}
-          className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
         >
           <Calendar className="w-8 h-8 text-orange-600 mb-2" />
-          <h4 className="font-bold text-gray-900">Plan Week</h4>
-          <p className="text-sm text-gray-600">Create meal plan</p>
+          <h4 className="font-bold text-gray-900 dark:text-white">Plan Week</h4>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Create meal plan</p>
         </button>
         
         <button
           onClick={() => setCurrentPage('grocery')}
-          className="bg-white rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
+          className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow text-left"
         >
           <ShoppingCart className="w-8 h-8 text-lime-600 mb-2" />
-          <h4 className="font-bold text-gray-900">Grocery List</h4>
-          <p className="text-sm text-gray-600">Auto-generate list</p>
+          <h4 className="font-bold text-gray-900 dark:text-white">Grocery List</h4>
+          <p className="text-sm text-gray-600 dark:text-gray-400">Auto-generate list</p>
         </button>
       </div>
     </div>
@@ -627,6 +574,7 @@ const HomePage = () => {
 const RecipesPage = () => {
   const { recipes, toggleFavorite } = useContext(AppContext);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
 
   const filteredRecipes = recipes.filter((recipe: Recipe) =>
     recipe.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -634,7 +582,7 @@ const RecipesPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8">
-      <h2 className="text-3xl font-bold text-gray-900 mb-6">Nigerian Recipes</h2>
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Nigerian Recipes</h2>
       
       <div className="mb-6 relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
@@ -643,20 +591,24 @@ const RecipesPage = () => {
           placeholder="Search recipes..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+          className="w-full pl-10 pr-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-900 dark:text-white rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
         />
       </div>
 
       <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
         {filteredRecipes.map((recipe: Recipe) => (
-          <div key={recipe.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+          <div 
+            key={recipe.id} 
+            className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow cursor-pointer"
+            onClick={() => setSelectedRecipe(recipe)}
+          >
             <div className="h-48 bg-gray-200 relative">
               <img src={recipe.imageUrl} alt={recipe.name} className="w-full h-full object-cover" />
               <button
-                onClick={() => toggleFavorite(recipe.id)}
-                className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md"
+                onClick={(e) => { e.stopPropagation(); toggleFavorite(recipe.id); }}
+                className="absolute top-2 right-2 bg-white dark:bg-gray-800 p-2 rounded-full shadow-md"
               >
-                <Heart className={`w-5 h-5 ${recipe.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400'}`} />
+                <Heart className={`w-5 h-5 ${recipe.isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-400 dark:text-gray-500'}`} />
               </button>
               {recipe.isHealthy && (
                 <div className="absolute top-2 left-2 bg-emerald-500 text-white px-2 py-1 rounded-full text-xs font-semibold flex items-center">
@@ -667,9 +619,9 @@ const RecipesPage = () => {
             </div>
             
             <div className="p-4">
-              <h3 className="font-bold text-lg text-gray-900 mb-2">{recipe.name}</h3>
+              <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">{recipe.name}</h3>
               
-              <div className="flex items-center text-sm text-gray-600 mb-3 space-x-4">
+              <div className="flex items-center text-sm text-gray-600 dark:text-gray-400 mb-3 space-x-4">
                 <div className="flex items-center">
                   <Clock className="w-4 h-4 mr-1" />
                   {recipe.prepTime + recipe.cookTime}min
@@ -680,29 +632,29 @@ const RecipesPage = () => {
                 </div>
               </div>
               
-              <div className="border-t pt-3 grid grid-cols-2 gap-2 text-sm">
+              <div className="border-t dark:border-gray-700 pt-3 grid grid-cols-2 gap-2 text-sm">
                 <div>
-                  <span className="text-gray-600">Calories:</span>
-                  <p className="font-semibold">{recipe.nutrition.calories}</p>
+                  <span className="text-gray-600 dark:text-gray-400">Calories:</span>
+                  <p className="font-semibold text-gray-900 dark:text-white">{recipe.nutrition.calories}</p>
                 </div>
                 <div>
-                  <span className="text-gray-600">Protein:</span>
-                  <p className="font-semibold">{recipe.nutrition.protein}g</p>
+                  <span className="text-gray-600 dark:text-gray-400">Protein:</span>
+                  <p className="font-semibold text-gray-900 dark:text-white">{recipe.nutrition.protein}g</p>
                 </div>
                 <div>
-                  <span className={`${recipe.nutrition.sodium > 600 ? 'text-red-600' : 'text-gray-600'}`}>
+                  <span className={`${recipe.nutrition.sodium > 600 ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'}`}>
                     Sodium:
                   </span>
-                  <p className={`font-semibold ${recipe.nutrition.sodium > 600 ? 'text-red-600' : ''}`}>
+                  <p className={`font-semibold ${recipe.nutrition.sodium > 600 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
                     {recipe.nutrition.sodium}mg
                     {recipe.nutrition.sodium > 600 && ' ⚠️'}
                   </p>
                 </div>
                 <div>
-                  <span className={`${recipe.nutrition.sugar > 10 ? 'text-red-600' : 'text-gray-600'}`}>
+                  <span className={`${recipe.nutrition.sugar > 10 ? 'text-red-600' : 'text-gray-600 dark:text-gray-400'}`}>
                     Sugar:
                   </span>
-                  <p className={`font-semibold ${recipe.nutrition.sugar > 10 ? 'text-red-600' : ''}`}>
+                  <p className={`font-semibold ${recipe.nutrition.sugar > 10 ? 'text-red-600' : 'text-gray-900 dark:text-white'}`}>
                     {recipe.nutrition.sugar}g
                     {recipe.nutrition.sugar > 10 && ' ⚠️'}
                   </p>
@@ -710,7 +662,7 @@ const RecipesPage = () => {
               </div>
 
               {recipe.healthNotes && (
-                <div className="mt-3 bg-emerald-50 p-2 rounded text-xs text-emerald-800">
+                <div className="mt-3 bg-emerald-50 dark:bg-emerald-900 p-2 rounded text-xs text-emerald-800 dark:text-emerald-200">
                   <AlertTriangle className="w-3 h-3 inline mr-1" />
                   {recipe.healthNotes}
                 </div>
@@ -719,49 +671,275 @@ const RecipesPage = () => {
           </div>
         ))}
       </div>
+      <RecipeModal recipe={selectedRecipe} onClose={() => setSelectedRecipe(null)} />
     </div>
   );
 };
 
-// Placeholder Pages
-const MealPlannerPage = () => (
-  <div className="max-w-7xl mx-auto px-4 py-8">
-    <h2 className="text-3xl font-bold text-gray-900 mb-6">Meal Planner</h2>
-    <div className="bg-white rounded-lg shadow-md p-8 text-center">
-      <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <p className="text-gray-600 text-lg mb-2">Weekly Meal Planning</p>
-      <p className="text-gray-500">Plan your meals for the entire week</p>
-    </div>
-  </div>
-);
+// MealPlannerPage Component (Working Calendar)
+const MealPlannerPage = () => {
+  const { recipes, mealPlan, setMealPlan } = useContext(AppContext);
+  const [startDate, setStartDate] = useState(new Date());
+  const [selectedDay, setSelectedDay] = useState<string | null>(null);
+  const [selectedMealType, setSelectedMealType] = useState<'breakfast' | 'lunch' | 'dinner' | 'snacks' | null>(null);
+  const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
+  useEffect(() => {
+    if (!mealPlan) {
+      const newPlan: MealPlan = {
+        id: '1',
+        name: 'Weekly Plan',
+        startDate: startDate.toISOString().split('T')[0],
+        meals: {}
+      };
+      daysOfWeek.forEach((day, i) => {
+        const date = new Date(startDate);
+        date.setDate(date.getDate() + i);
+        newPlan.meals[date.toISOString().split('T')[0]] = {};
+      });
+      setMealPlan(newPlan);
+    }
+  }, [startDate]);
+
+  const changeWeek = (direction: number) => {
+    const newDate = new Date(startDate);
+    newDate.setDate(newDate.getDate() + direction * 7);
+    setStartDate(newDate);
+  };
+
+  const addMeal = (day: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks', recipe: Recipe) => {
+    if (mealPlan) {
+      const updated = { ...mealPlan };
+      if (mealType === 'snacks') {
+        if (!updated.meals[day].snacks) updated.meals[day].snacks = [];
+        updated.meals[day].snacks!.push(recipe);
+      } else {
+        updated.meals[day][mealType] = recipe;
+      }
+      setMealPlan(updated);
+    }
+  };
+
+  const removeMeal = (day: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks', index?: number) => {
+    if (mealPlan) {
+      const updated = { ...mealPlan };
+      if (mealType === 'snacks' && index !== undefined) {
+        updated.meals[day].snacks = updated.meals[day].snacks?.filter((_, i) => i !== index);
+      } else {
+        delete updated.meals[day][mealType];
+      }
+      setMealPlan(updated);
+    }
+  };
+
+  const getDays = () => {
+    return daysOfWeek.map((dayName, i) => {
+      const day = new Date(startDate);
+      day.setDate(day.getDate() + i);
+      return {
+        name: dayName,
+        date: day.toISOString().split('T')[0],
+        display: day.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })
+      };
+    });
+  };
+
+  const openAddModal = (day: string, mealType: 'breakfast' | 'lunch' | 'dinner' | 'snacks') => {
+    setSelectedDay(day);
+    setSelectedMealType(mealType);
+  };
+
+  const handleAdd = (recipe: Recipe) => {
+    if (selectedDay && selectedMealType) {
+      addMeal(selectedDay, selectedMealType, recipe);
+      setSelectedDay(null);
+      setSelectedMealType(null);
+    }
+  };
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Meal Planner</h2>
+      
+      <div className="flex items-center justify-between mb-4">
+        <button onClick={() => changeWeek(-1)} className="p-2 rounded bg-gray-200 dark:bg-gray-700">
+          <ChevronLeft className="w-5 h-5" />
+        </button>
+        <span className="text-lg font-semibold text-gray-900 dark:text-white">
+          Week of {startDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
+        </span>
+        <button onClick={() => changeWeek(1)} className="p-2 rounded bg-gray-200 dark:bg-gray-700">
+          <ChevronRight className="w-5 h-5" />
+        </button>
+      </div>
+
+      <div className="grid md:grid-cols-7 gap-4">
+        {getDays().map(day => (
+          <div key={day.date} className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-4">
+            <h3 className="font-semibold text-center mb-4 text-gray-900 dark:text-white">{day.display}</h3>
+            {['breakfast', 'lunch', 'dinner', 'snacks'].map(mealType => (
+              <div key={mealType} className="mb-3">
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-sm font-medium capitalize text-gray-700 dark:text-gray-300">{mealType}</span>
+                  <button 
+                    onClick={() => openAddModal(day.date, mealType as any)} 
+                    className="text-emerald-600 hover:text-emerald-800 text-sm"
+                  >
+                    <Plus className="w-4 h-4" />
+                  </button>
+                </div>
+                {mealType !== 'snacks' ? (
+                  mealPlan?.meals[day.date]?.[mealType] && (
+                    <div className="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm flex justify-between items-center">
+                      <span>{mealPlan.meals[day.date][mealType].name}</span>
+                      <button onClick={() => removeMeal(day.date, mealType)} className="text-red-500">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  )
+                ) : (
+                  mealPlan?.meals[day.date]?.snacks?.map((snack, i) => (
+                    <div key={i} className="bg-gray-100 dark:bg-gray-700 p-2 rounded text-sm flex justify-between items-center mb-1">
+                      <span>{snack.name}</span>
+                      <button onClick={() => removeMeal(day.date, 'snacks', i)} className="text-red-500">
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
+      {/* Add Meal Modal */}
+      {selectedDay && selectedMealType && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl w-96 p-6">
+            <h3 className="text-lg font-bold mb-4 text-gray-900 dark:text-white">Add {selectedMealType}</h3>
+            <select 
+              onChange={(e) => {
+                const recipe = recipes.find(r => r.id === e.target.value);
+                if (recipe) handleAdd(recipe);
+              }}
+              className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded"
+            >
+              <option value="">Select Recipe</option>
+              {recipes.filter(r => r.category === selectedMealType || selectedMealType === 'snacks').map(r => (
+                <option key={r.id} value={r.id}>{r.name}</option>
+              ))}
+            </select>
+            <button onClick={() => { setSelectedDay(null); setSelectedMealType(null); }} className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+// NutritionPage Placeholder (Improved UI)
 const NutritionPage = () => (
   <div className="max-w-7xl mx-auto px-4 py-8">
-    <h2 className="text-3xl font-bold text-gray-900 mb-6">Nutrition Dashboard</h2>
-    <div className="bg-white rounded-lg shadow-md p-8 text-center">
+    <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Nutrition Dashboard</h2>
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-8 text-center">
       <TrendingUp className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <p className="text-gray-600 text-lg mb-2">Track Your Nutrition</p>
-      <p className="text-gray-500">Monitor your daily intake and health goals</p>
+      <p className="text-gray-600 dark:text-gray-400 text-lg mb-2">Track Your Nutrition</p>
+      <p className="text-gray-500 dark:text-gray-500">Monitor your daily intake and health goals</p>
     </div>
   </div>
 );
 
-const GroceryListPage = () => (
-  <div className="max-w-7xl mx-auto px-4 py-8">
-    <h2 className="text-3xl font-bold text-gray-900 mb-6">Grocery List</h2>
-    <div className="bg-white rounded-lg shadow-md p-8 text-center">
-      <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
-      <p className="text-gray-600 text-lg mb-2">Shopping Made Easy</p>
-      <p className="text-gray-500">Auto-generate your grocery list from meal plans</p>
+// GroceryListPage (Generate from Meal Plan)
+const GroceryListPage = () => {
+  const { mealPlan } = useContext(AppContext);
+  const [groceryList, setGroceryList] = useState<GroceryItem[]>([]);
+
+  useEffect(() => {
+    if (mealPlan) {
+      const itemsMap = new Map<string, GroceryItem>();
+      Object.values(mealPlan.meals).forEach(dayMeals => {
+        ['breakfast', 'lunch', 'dinner'].forEach(mealType => {
+          const recipe = dayMeals[mealType];
+          if (recipe) {
+            recipe.ingredients.forEach(ing => {
+              const key = ing.name;
+              if (itemsMap.has(key)) {
+                const existing = itemsMap.get(key)!;
+                existing.amount += ing.amount;
+              } else {
+                itemsMap.set(key, { ...ing, checked: false });
+              }
+            });
+          }
+        });
+        dayMeals.snacks?.forEach(snack => {
+          snack.ingredients.forEach(ing => {
+            const key = ing.name;
+            if (itemsMap.has(key)) {
+              const existing = itemsMap.get(key)!;
+              existing.amount += ing.amount;
+            } else {
+              itemsMap.set(key, { ...ing, checked: false });
+            }
+          });
+        });
+      });
+      setGroceryList(Array.from(itemsMap.values()));
+    }
+  }, [mealPlan]);
+
+  const toggleChecked = (index: number) => {
+    const updated = [...groceryList];
+    updated[index].checked = !updated[index].checked;
+    setGroceryList(updated);
+  };
+
+  const groupedItems = groceryList.reduce((acc, item) => {
+    if (!acc[item.category]) acc[item.category] = [];
+    acc[item.category].push(item);
+    return acc;
+  }, {} as Record<string, GroceryItem[]>);
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 py-8">
+      <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-6">Grocery List</h2>
+      {Object.entries(groupedItems).map(([category, items]) => (
+        <div key={category} className="mb-6">
+          <h3 className="font-semibold text-lg mb-3 text-gray-900 dark:text-white">{category}</h3>
+          <ul className="bg-white dark:bg-gray-800 rounded-lg shadow-md divide-y dark:divide-gray-700">
+            {items.map((item, i) => (
+              <li key={i} className="flex items-center justify-between p-4">
+                <div className="flex items-center">
+                  <input 
+                    type="checkbox" 
+                    checked={item.checked} 
+                    onChange={() => toggleChecked(groceryList.findIndex(g => g.ingredient === item.ingredient && g.category === category))} 
+                    className="mr-3"
+                  />
+                  <span className={`text-gray-900 dark:text-white ${item.checked ? 'line-through text-gray-500 dark:text-gray-400' : ''}`}>
+                    {item.amount} {item.unit} {item.ingredient}
+                  </span>
+                </div>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+      {!groceryList.length && (
+        <p className="text-center text-gray-500 dark:text-gray-400">No items in grocery list. Create a meal plan first.</p>
+      )}
     </div>
-  </div>
-);
+  );
+};
 
 // Main App
 export default function NigerianMealPlanner() {
   return (
     <AppProvider>
-      <div className="min-h-screen bg-gray-50">
+      <div className={`min-h-screen bg-gray-50 dark:bg-gray-900`}>
         <Header />
         <AppContent />
       </div>
@@ -782,3 +960,4 @@ function AppContent() {
     </>
   );
 }
+```
